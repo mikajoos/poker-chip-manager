@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+    <!-- WICHTIG: Dieser Meta-Tag ist entscheidend für responsives Design -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Poker Chip Manager</title>
+
+    <!-- Einbindung von Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Einbindung von React und Babel -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        /* Zusätzliche Stile für ein besseres Aussehen */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Dunkler Hintergrund als Fallback */
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+    </style>
+</head>
+<body>
+    <!-- Das ist das HTML-Element, in das Ihre React-App geladen wird -->
+    <div id="root"></div>
+
+    <!-- Ihr React-Code (App.jsx) kommt hier hinein -->
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Haupt-App-Komponente
+        const App = () => {
+            // Zustand für Spieler: Array von Objekten { id, name, chips, betInCurrentStreet, hasFolded, hasActedInStreet, isAllIn, totalContribution, isEliminated }
+            const [players, setPlayers] = useState([]);
+            // Zustand für den gesamten Pot (wird während der Runde zur Anzeige verwendet)
+            const [totalPot, setTotalPot] = useState(0);
+            // Zustand für die aufgeteilten Pötte (Haupt-Pot, Side-Pots) für die Gewinner-Auswahl
+            const [potsForDistribution, setPotsForDistribution] = useState([]);
+            // Zustand für den Index des Pots, der gerade verteilt wird
+            const [currentPotDistributionIndex, setCurrentPotDistributionIndex] = useState(0);
+            // Zustand für den höchsten Einsatz in der aktuellen Wettrunde (Straße)
+            const [currentBet, setCurrentBet] = useState(0);
+            // Zustand für den Index des Spielers, der an der Reihe ist
+            const [activePlayerIndex, setActivePlayerIndex] = useState(0);
+            // Zustand für Spielnachrichten
+            const [message, setMessage] = useState("Willkommen beim Poker! Fügen Sie Spieler hinzu, um zu beginnen.");
+            // Zustand, um zu verfolgen, ob eine Runde begonnen hat (Blinds gepostet)
+            const [roundStarted, setRoundStarted] = useState(false);
+            // Zustand, um zu verfolgen, ob die aktuelle Wettrunde (Straße) abgeschlossen ist
+            const [bettingRoundComplete, setBettingRoundComplete] = useState(false);
+            // Zustand für die Eingabe des neuen Spielernamens
+            const [newPlayerName, setNewPlayerName] = useState('');
+            // Ref für das Erhöhen-Eingabefeld
+            const raiseInputRef = useRef(null);
+            // Zustand für den Small Blind Betrag
+            const [smallBlind, setSmallBlind] = useState(10);
+            // Zustand für den Big Blind Betrag
+            const [bigBlind, setBigBlind] = useState(20);
+            // Zustand für den Index des Dealers (Button-Spieler)
+            const [dealerButtonIndex, setDealerButtonIndex] = useState(0);
+            // Zustand, um die Gewinnerauswahl anzuzeigen
+            const [showWinnerSelection, setShowWinnerSelection] = useState(false);
+            // Zustand für die aktuelle Wettstraße (0: Pre-Flop, 1: Flop, 2: Turn, 3: River)
+            const [currentStreet, setCurrentStreet] = useState(0);
+            // Zustand, um zu signalisieren, dass die Initialisierung aus dem Local Storage abgeschlossen ist
+            const [isLoaded, setIsLoaded] = useState(false);
+            // Zustand für die Anfangschips jedes Spielers
+            const [initialChips, setInitialChips] = useState(1000);
+            // Zustand für den Index des Small Blind Spielers
+            const [smallBlindPlayerIndex, setSmallBlindPlayerIndex] = useState(null);
+            // Zustand für den Index des Big Blind Spielers
+            const [bigBlindPlayerIndex, setBigBlindPlayerIndex] = useState(null);
+            // Zustand für die ausgewählten Gewinner eines Pots
+            const [selectedWinners, setSelectedWinners] = useState([]);
+
+
+            // Hilfsfunktion zur Ermittlung des Namens der aktuellen Straße
+            const getStreetName = (street) => {
+                switch (street) {
+                    case 0: return "Pre-Flop";
+                    case 1: return "Flop";
+                    case 2: return "Turn";
+                    case 3: return "River";
+                    default: return "Unbekannte Straße";
+                }
+            };
+
+            // Effekt zum Laden des Spielzustands aus dem Local Storage beim Start
+            useEffect(() => {
+                try {
+                    const savedState = localStorage.getItem('pokerGameState');
+                    if (savedState) {
+                        const parsedState = JSON.parse(savedState);
+                        setPlayers(parsedState.players || []);
+                        setTotalPot(parsedState.totalPot || 0);
+                        setPotsForDistribution(parsedState.potsForDistribution || []);
+                        setCurrentPotDistributionIndex(parsedState.currentPotDistributionIndex || 0);
+                        setCurrentBet(parsedState.currentBet || 0);
+                        setActivePlayerIndex(parsedState.activePlayerIndex || 0);
+                        setMessage(parsedState.message || "Willkommen beim Poker! Fügen Sie Spieler hinzu, um zu beginnen.");
+                        setRoundStarted(parsedState.roundStarted || false);
+                        setBettingRoundComplete(parsedState.bettingRoundComplete || false);
+                        setSmallBlind(parsedState.smallBlind || 10);
+                        setBigBlind(parsedState.bigBlind || 20);
+                        setDealerButtonIndex(parsedState.dealerButtonIndex || 0);
+                        setShowWinnerSelection(parsedState.showWinnerSelection || false);
+                        setCurrentStreet(parsedState.currentStreet || 0);
+                        setInitialChips(parsedState.initialChips || 1000);
+                        setSmallBlindPlayerIndex(parsedState.smallBlindPlayerIndex || null);
+                        setBigBlindPlayerIndex(parsedState.bigBlindPlayerIndex || null);
+                    }
+                } catch (error) {
+                    console.error("Fehler beim Laden des Spielzustands aus dem Local Storage:", error);
+                    localStorage.removeItem('pokerGameState');
+                } finally {
+                    setIsLoaded(true);
+                }
+            }, []);
+
+            // Effekt zum Speichern des Spielzustands im Local Storage bei Änderungen
+            useEffect(() => {
+                if (isLoaded) {
+                    try {
+                        const gameState = {
+                            players,
+                            totalPot,
+                            potsForDistribution,
+                            currentPotDistributionIndex,
+                            currentBet,
+                            activePlayerIndex,
+                            message,
+                            roundStarted,
+                            bettingRoundComplete,
+                            smallBlind,
+                            bigBlind,
+                            dealerButtonIndex,
+                            showWinnerSelection,
+                            currentStreet,
+                            initialChips,
+                            smallBlindPlayerIndex,
+                            bigBlindPlayerIndex,
+                        };
+                        localStorage.setItem('pokerGameState', JSON.stringify(gameState));
+                    } catch (error) {
+                        console.error("Fehler beim Speichern des Spielzustands im Local Storage:", error);
+                    }
+                }
+            }, [
+                players, totalPot, potsForDistribution, currentPotDistributionIndex, currentBet,
+                activePlayerIndex, message, roundStarted, bettingRoundComplete, smallBlind,
+                bigBlind, dealerButtonIndex, showWinnerSelection, currentStreet, isLoaded,
+                initialChips, smallBlindPlayerIndex, bigBlindPlayerIndex
+            ]);
+
+            // Effekt zur Behandlung des Rundenendes, wenn nur noch ein Spieler übrig ist
+            useEffect(() => {
+                if (!roundStarted || bettingRoundComplete) return;
+
+                const activePlayers = players.filter(p => !p.hasFolded && !p.isEliminated);
+
+                if (activePlayers.length === 1) {
+                    const winner = activePlayers[0];
+                    const finalPot = players.reduce((sum, p) => sum + p.totalContribution, 0);
+                    setMessage(`${winner.name} gewinnt den Pot von ${finalPot} Chips!`);
+
+                    const updatedPlayers = players.map(p =>
+                        p.id === winner.id ? { ...p, chips: p.chips + finalPot } : p
+                    );
+
+                    setPlayers(updatedPlayers);
+                    setBettingRoundComplete(true);
+                    setShowWinnerSelection(false);
+
+                    setTimeout(() => {
+                        resetForNewRound(updatedPlayers);
+                    }, 3000);
+                }
+            }, [players, roundStarted, bettingRoundComplete, totalPot]);
+
+
+            // Funktion zum Hinzufügen eines neuen Spielers
+            const addPlayer = () => {
+                if (newPlayerName.trim() === '') {
+                    setMessage("Bitte geben Sie einen Namen für den Spieler ein.");
+                    return;
+                }
+                const newPlayer = {
+                    id: Date.now(),
+                    name: newPlayerName.trim(),
+                    chips: initialChips,
+                    betInCurrentStreet: 0,
+                    hasFolded: false,
+                    hasActedInStreet: false,
+                    isAllIn: false,
+                    totalContribution: 0,
+                    isEliminated: false,
+                };
+                setPlayers([...players, newPlayer]);
+                setNewPlayerName('');
+                setMessage(`${newPlayer.name} ist dem Spiel mit ${initialChips} Chips beigetreten.`);
+            };
+
+            // Funktion zum Entfernen eines Spielers
+            const removePlayer = (playerId) => {
+                const updatedPlayers = players.filter(player => player.id !== playerId);
+                setPlayers(updatedPlayers);
+                setMessage("Spieler entfernt.");
+                if (activePlayerIndex !== null && players[activePlayerIndex]?.id === playerId) {
+                    setActivePlayerIndex(0);
+                }
+                if (updatedPlayers.length === 0) {
+                    resetGame();
+                }
+            };
+
+            // Funktion zur Behandlung von Tastendrücken in Eingabefeldern
+            const handleInputKeyDown = (e, action) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    action();
+                }
+            };
+
+            // Funktion zur Behandlung von Spieleraktionen
+            const handleAction = (action, amount = 0) => {
+                const currentPlayer = players[activePlayerIndex];
+                if (!currentPlayer || currentPlayer.hasFolded || currentPlayer.isAllIn || bettingRoundComplete) {
+                    return;
+                }
+
+                let newPlayers = [...players];
+                let updatedPlayer = { ...currentPlayer };
+                let chipsToPay = 0;
+
+                switch (action) {
+                    case 'check':
+                        if (updatedPlayer.betInCurrentStreet < currentBet) {
+                            setMessage(`${currentPlayer.name} kann nicht checken. Es gibt einen Einsatz von ${currentBet}.`);
+                            return;
+                        }
+                        updatedPlayer.hasActedInStreet = true;
+                        setMessage(`${currentPlayer.name} checkt.`);
+                        break;
+                    case 'call':
+                        chipsToPay = Math.min(updatedPlayer.chips, currentBet - updatedPlayer.betInCurrentStreet);
+                        if (chipsToPay <= 0) {
+                            setMessage(`${currentPlayer.name} kann nicht callen. Es gibt keinen Einsatz zu callen.`);
+                            return;
+                        }
+                        updatedPlayer.chips -= chipsToPay;
+                        updatedPlayer.betInCurrentStreet += chipsToPay;
+                        updatedPlayer.totalContribution += chipsToPay;
+                        updatedPlayer.hasActedInStreet = true;
+                        if(updatedPlayer.chips === 0) updatedPlayer.isAllIn = true;
+                        setMessage(`${currentPlayer.name} callt ${chipsToPay}.`);
+                        break;
+                    case 'raise':
+                        const totalBet = amount;
+                        chipsToPay = totalBet - updatedPlayer.betInCurrentStreet;
+                        if (totalBet <= currentBet) {
+                            setMessage(`Die Erhöhung muss höher sein als der aktuelle Einsatz (${currentBet}).`);
+                            return;
+                        }
+                        if (updatedPlayer.chips < chipsToPay) {
+                            setMessage(`${currentPlayer.name} hat nicht genug Chips, um auf ${totalBet} zu erhöhen.`);
+                            return;
+                        }
+                        updatedPlayer.chips -= chipsToPay;
+                        updatedPlayer.betInCurrentStreet += chipsToPay;
+                        updatedPlayer.totalContribution += chipsToPay;
+                        setCurrentBet(totalBet);
+                        newPlayers = newPlayers.map(p => p.id !== updatedPlayer.id && !p.hasFolded && !p.isAllIn ? { ...p, hasActedInStreet: false } : p);
+                        updatedPlayer.hasActedInStreet = true;
+                        if(updatedPlayer.chips === 0) updatedPlayer.isAllIn = true;
+                        setMessage(`${currentPlayer.name} erhöht auf ${totalBet}.`);
+                        break;
+                    case 'fold':
+                        updatedPlayer.hasFolded = true;
+                        updatedPlayer.hasActedInStreet = true;
+                        setMessage(`${currentPlayer.name} passt.`);
+                        break;
+                    case 'allIn':
+                        chipsToPay = updatedPlayer.chips;
+                        if (chipsToPay === 0) return;
+
+                        const allInBet = updatedPlayer.betInCurrentStreet + chipsToPay;
+                        updatedPlayer.chips = 0;
+                        updatedPlayer.betInCurrentStreet = allInBet;
+                        updatedPlayer.totalContribution += chipsToPay;
+                        updatedPlayer.isAllIn = true;
+                        updatedPlayer.hasActedInStreet = true;
+
+                        if (allInBet > currentBet) {
+                            setCurrentBet(allInBet);
+                            newPlayers = newPlayers.map(p => p.id !== updatedPlayer.id && !p.hasFolded && !p.isAllIn ? { ...p, hasActedInStreet: false } : p);
+                            setMessage(`${currentPlayer.name} geht All-In und erhöht auf ${allInBet}.`);
+                        } else {
+                            setMessage(`${currentPlayer.name} geht All-In für ${chipsToPay}.`);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                setTotalPot(prevPot => prevPot + chipsToPay);
+                newPlayers[activePlayerIndex] = updatedPlayer;
+                setPlayers(newPlayers);
+                advanceTurnOrStreet(newPlayers);
+            };
+
+            // Funktion zum Vorrücken des Zuges oder der Straße
+            const advanceTurnOrStreet = (currentPlayersState) => {
+                const nonFoldedPlayers = currentPlayersState.filter(p => !p.hasFolded && !p.isEliminated);
+                if (nonFoldedPlayers.length <= 1) {
+                    setBettingRoundComplete(true);
+                    calculateAndShowPots(currentPlayersState);
+                    return;
+                }
+
+                const nonFoldedNonAllInPlayers = nonFoldedPlayers.filter(p => !p.isAllIn);
+                const allHaveActed = nonFoldedNonAllInPlayers.every(p => p.hasActedInStreet && p.betInCurrentStreet === currentBet);
+
+                if (allHaveActed || nonFoldedNonAllInPlayers.length < 2) {
+                    if (currentStreet < 3) {
+                        setCurrentStreet(prev => prev + 1);
+                        setCurrentBet(0);
+                        const nextStreetPlayers = currentPlayersState.map(p => ({ ...p, betInCurrentStreet: 0, hasActedInStreet: false }));
+                        setPlayers(nextStreetPlayers);
+
+                        let firstPlayerIndex = dealerButtonIndex;
+                        let foundPlayer = false;
+                        for(let i = 0; i < nextStreetPlayers.length; i++) {
+                            const potentialIndex = (firstPlayerIndex + 1 + i) % nextStreetPlayers.length;
+                            if(!nextStreetPlayers[potentialIndex].hasFolded && !nextStreetPlayers[potentialIndex].isAllIn && !nextStreetPlayers[potentialIndex].isEliminated) {
+                                setActivePlayerIndex(potentialIndex);
+                                foundPlayer = true;
+                                break;
+                            }
+                        }
+                        if (foundPlayer) {
+                             setMessage(`Wettrunde für ${getStreetName(currentStreet + 1)} beginnt.`);
+                        } else {
+                             // Alle verbleibenden Spieler sind All-In, direkt zum Showdown
+                             setMessage("Alle verbleibenden Spieler sind All-In. Auf zum Showdown!");
+                             setBettingRoundComplete(true);
+                             calculateAndShowPots(nextStreetPlayers);
+                        }
+
+                    } else {
+                        setMessage("Alle Wettrunden beendet. Wählen Sie den Gewinner.");
+                        setBettingRoundComplete(true);
+                        calculateAndShowPots(currentPlayersState);
+                    }
+                } else {
+                    let nextPlayerIndex = activePlayerIndex;
+                    do {
+                        nextPlayerIndex = (nextPlayerIndex + 1) % currentPlayersState.length;
+                    } while (currentPlayersState[nextPlayerIndex].hasFolded || currentPlayersState[nextPlayerIndex].isAllIn || currentPlayersState[nextPlayerIndex].isEliminated)
+
+                    setActivePlayerIndex(nextPlayerIndex);
+                }
+            };
+
+            // Funktion zum Starten einer neuen Runde
+            const startNewRound = () => {
+                const activePlayers = players.filter(p => !p.isEliminated);
+                if (activePlayers.length < 2) {
+                    setMessage("Sie benötigen mindestens 2 nicht ausgeschiedene Spieler, um eine Runde zu starten.");
+                    return;
+                }
+
+                resetForNewRound(players, (resetPlayers) => {
+                    let tempPlayers = resetPlayers.map(p => ({...p, isEliminated: p.chips <= 0}));
+                    let newDealerButtonIndex = dealerButtonIndex;
+                    do {
+                        newDealerButtonIndex = (newDealerButtonIndex + 1) % tempPlayers.length;
+                    } while (tempPlayers[newDealerButtonIndex].isEliminated)
+                    setDealerButtonIndex(newDealerButtonIndex);
+
+                    let newPot = 0;
+
+                    let sbIndex = newDealerButtonIndex;
+                    do {
+                        sbIndex = (sbIndex + 1) % tempPlayers.length;
+                    } while (tempPlayers[sbIndex].isEliminated);
+
+                    let bbIndex = sbIndex;
+                    do {
+                        bbIndex = (bbIndex + 1) % tempPlayers.length;
+                    } while (tempPlayers[bbIndex].isEliminated);
+
+                    // Small Blind
+                    const sbAmount = Math.min(tempPlayers[sbIndex].chips, smallBlind);
+                    tempPlayers[sbIndex].chips -= sbAmount;
+                    tempPlayers[sbIndex].betInCurrentStreet = sbAmount;
+                    tempPlayers[sbIndex].totalContribution = sbAmount;
+                    if(tempPlayers[sbIndex].chips === 0) tempPlayers[sbIndex].isAllIn = true;
+                    newPot += sbAmount;
+
+                    // Big Blind
+                    const bbAmount = Math.min(tempPlayers[bbIndex].chips, bigBlind);
+                    tempPlayers[bbIndex].chips -= bbAmount;
+                    tempPlayers[bbIndex].betInCurrentStreet = bbAmount;
+                    tempPlayers[bbIndex].totalContribution = bbAmount;
+                    if(tempPlayers[bbIndex].chips === 0) tempPlayers[bbIndex].isAllIn = true;
+                    newPot += bbAmount;
+
+                    setPlayers(tempPlayers);
+                    setTotalPot(newPot);
+                    setCurrentBet(bigBlind);
+                    setMessage(`Neue Runde gestartet! Blinds wurden gepostet.`);
+                    setRoundStarted(true);
+
+                    setSmallBlindPlayerIndex(sbIndex);
+                    setBigBlindPlayerIndex(bbIndex);
+
+                    let firstPlayerIndex = bbIndex;
+                    do {
+                        firstPlayerIndex = (firstPlayerIndex + 1) % tempPlayers.length;
+                    } while (tempPlayers[firstPlayerIndex].isEliminated || tempPlayers[firstPlayerIndex].hasFolded || tempPlayers[firstPlayerIndex].isAllIn);
+
+                    setActivePlayerIndex(firstPlayerIndex);
+                });
+            };
+
+            // Berechnet Haupt- und Side-Pots für die Verteilung
+            const calculateAndShowPots = (currentPlayers) => {
+                let playersInvolved = currentPlayers.filter(p => p.totalContribution > 0);
+                let calculatedPots = [];
+
+                const actualTotalPot = currentPlayers.reduce((sum, p) => sum + p.totalContribution, 0);
+                setTotalPot(actualTotalPot);
+
+                const contributions = [...new Set(playersInvolved.map(p => p.totalContribution))].sort((a, b) => a - b);
+
+                let lastContribution = 0;
+                for (const contribution of contributions) {
+                    const potAmount = playersInvolved.reduce((sum, p) => {
+                        return sum + (Math.min(p.totalContribution, contribution) - Math.min(p.totalContribution, lastContribution));
+                    }, 0);
+
+                    if (potAmount > 0) {
+                        const eligiblePlayerIds = playersInvolved.filter(p => p.totalContribution >= contribution && !p.hasFolded).map(p => p.id);
+                        if (eligiblePlayerIds.length > 0) {
+                            calculatedPots.push({
+                                name: calculatedPots.length === 0 ? "Haupt-Pot" : `Side-Pot ${calculatedPots.length}`,
+                                amount: potAmount,
+                                eligiblePlayerIds: eligiblePlayerIds
+                            });
+                        }
+                    }
+                    lastContribution = contribution;
+                }
+
+                const distributedAmount = calculatedPots.reduce((sum, pot) => sum + pot.amount, 0);
+                const diff = actualTotalPot - distributedAmount;
+
+                if (diff > 0 && calculatedPots.length > 0) {
+                    calculatedPots[calculatedPots.length - 1].amount += diff;
+                }
+
+                setPotsForDistribution(calculatedPots.filter(p => p.amount > 0 && p.eligiblePlayerIds.length > 0));
+                setCurrentPotDistributionIndex(0);
+                setShowWinnerSelection(true);
+            };
+
+            // Wählt einen Gewinner für die Auswahl aus oder ab
+            const handleWinnerSelection = (winnerId) => {
+                setSelectedWinners(prev =>
+                    prev.includes(winnerId)
+                        ? prev.filter(id => id !== winnerId)
+                        : [...prev, winnerId]
+                );
+            };
+
+            // Verteilt den Pot an die ausgewählten Gewinner
+            const distributePot = () => {
+                const currentPot = potsForDistribution[currentPotDistributionIndex];
+                if (!currentPot || selectedWinners.length === 0) return;
+
+                let updatedPlayers = [...players];
+                const potAmount = currentPot.amount;
+                const splitAmount = Math.floor(potAmount / selectedWinners.length);
+                const remainder = potAmount % selectedWinners.length;
+
+                let winnerNames = [];
+                selectedWinners.forEach((winnerId, index) => {
+                    const player = updatedPlayers.find(p => p.id === winnerId);
+                    if (player) {
+                        // Der erste Spieler in der Liste erhält den Rest, um Rundungsfehler zu vermeiden
+                        const winAmount = splitAmount + (index === 0 ? remainder : 0);
+                        player.chips += winAmount;
+                        winnerNames.push(`${player.name} (+${winAmount})`);
+                    }
+                });
+
+                setMessage(`${currentPot.name} an ${winnerNames.join(', ')} verteilt.`);
+
+                if (currentPotDistributionIndex < potsForDistribution.length - 1) {
+                    setCurrentPotDistributionIndex(prev => prev + 1);
+                    setPlayers(updatedPlayers);
+                    setSelectedWinners([]); // Auswahl für den nächsten Pot zurücksetzen
+                } else {
+                    // Letzter Pot verteilt
+                    setMessage("Alle Pötte wurden verteilt!");
+                    resetForNewRound(updatedPlayers);
+                    setSelectedWinners([]); // Auswahl am Ende zurücksetzen
+                }
+            };
+
+            // Setzt den Zustand für eine neue Runde zurück
+            const resetForNewRound = (lastStateOfPlayers, callback) => {
+                const playersToReset = lastStateOfPlayers || players;
+                const finalPlayersState = playersToReset.map(p => ({
+                    ...p,
+                    betInCurrentStreet: 0,
+                    hasFolded: false,
+                    hasActedInStreet: false,
+                    isAllIn: false,
+                    totalContribution: 0,
+                    isEliminated: p.chips <= 0,
+                }));
+
+                setPlayers(finalPlayersState);
+                setTotalPot(0);
+                setCurrentBet(0);
+                setRoundStarted(false);
+                setBettingRoundComplete(false);
+                setShowWinnerSelection(false);
+                setCurrentStreet(0);
+                setPotsForDistribution([]);
+                setCurrentPotDistributionIndex(0);
+                setSmallBlindPlayerIndex(null);
+                setBigBlindPlayerIndex(null);
+                if (typeof callback === 'function') {
+                    callback(finalPlayersState);
+                }
+            };
+
+            // Setzt das gesamte Spiel zurück, behält aber die Spieler
+            const resetGame = () => {
+                setPlayers(players.map(p => ({
+                    ...p,
+                    chips: initialChips,
+                    betInCurrentStreet: 0,
+                    hasFolded: false,
+                    hasActedInStreet: false,
+                    isAllIn: false,
+                    totalContribution: 0,
+                    isEliminated: false,
+                })));
+                setTotalPot(0);
+                setPotsForDistribution([]);
+                setCurrentPotDistributionIndex(0);
+                setCurrentBet(0);
+                setActivePlayerIndex(0);
+                setMessage("Willkommen beim Poker! Fügen Sie Spieler hinzu, um zu beginnen.");
+                setRoundStarted(false);
+                setBettingRoundComplete(false);
+                setNewPlayerName('');
+                setSmallBlind(10);
+                setBigBlind(20);
+                setDealerButtonIndex(0);
+                setShowWinnerSelection(false);
+                setCurrentStreet(0);
+                setSmallBlindPlayerIndex(null);
+                setBigBlindPlayerIndex(null);
+                localStorage.removeItem('pokerGameState');
+            };
+
+            // Funktion für den Re-buy eines Spielers
+            const handleRebuy = (playerId) => {
+                setPlayers(players.map(p => {
+                    if (p.id === playerId) {
+                        setMessage(`${p.name} kauft sich mit ${initialChips} Chips wieder ein.`);
+                        return { ...p, chips: initialChips, isEliminated: false };
+                    }
+                    return p;
+                }));
+            };
+
+            const chipsToCall = activePlayerIndex !== null && players[activePlayerIndex] ? currentBet - players[activePlayerIndex].betInCurrentStreet : 0;
+            const isCheckDisabled = chipsToCall > 0;
+            const isCallDisabled = chipsToCall <= 0;
+
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-green-700 to-green-900 text-white font-sans p-4 sm:p-6 md:p-8 flex flex-col items-center">
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-yellow-300 drop-shadow-lg text-center">Poker Chip Manager</h1>
+                    <div className="bg-gray-800 bg-opacity-70 rounded-xl p-4 mb-6 w-full max-w-4xl text-center shadow-lg">
+                        <p className="text-base sm:text-lg font-semibold">{message}</p>
+                    </div>
+
+                    {/* Hauptcontainer für Inhalt und Seitenanzeigen */}
+                    <div className="flex flex-col lg:flex-row w-full max-w-7xl gap-4">
+                        {/* Linke Seitenanzeige (sichtbar auf großen Bildschirmen) */}
+                        <div className="hidden lg:flex lg:w-1/6 items-center justify-center bg-gray-700 bg-opacity-50 rounded-xl p-4 shadow-lg">
+                            <p className="text-gray-300 text-center">Seitlicher Werbebereich</p>
+                            {/* Fügen Sie hier Ihren Werbecode ein */}
+                            <div className="w-full h-96 bg-gray-600 flex items-center justify-center rounded-lg">
+                                <span className="text-gray-300 text-lg">Anzeige 1</span>
+                            </div>
+                        </div>
+
+                        {/* Hauptinhalt der Anwendung */}
+                        <div className="w-full lg:w-4/6 flex flex-col items-center">
+                            {/* Spiel-Setup */}
+                            {!roundStarted && !showWinnerSelection && (
+                                <div className="w-full max-w-4xl">
+                                    <div className="bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 mb-6 shadow-lg flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                                        <input type="text" placeholder="Spielername" value={newPlayerName} onChange={(e) => setNewPlayerName(e.target.value)} onKeyDown={(e) => handleInputKeyDown(e, addPlayer)} className="text-base p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto flex-grow"/>
+                                        <button onClick={addPlayer} className="text-base bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 w-full sm:w-auto">Spieler hinzufügen</button>
+                                    </div>
+                                    <div className="bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 mb-8 shadow-lg grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                                        <div>
+                                            <h2 className="text-xl sm:text-2xl font-semibold text-yellow-300">Anfangs-Chips</h2>
+                                            <input type="number" min="100" value={initialChips} onChange={(e) => setInitialChips(Math.max(100, parseInt(e.target.value) || 0))} className="p-2 rounded-lg bg-gray-700 text-white w-28 text-center mt-2"/>
+                                        </div>
+                                        <div>
+                                            <h2 className="text-xl sm:text-2xl font-semibold text-yellow-300">Small Blind</h2>
+                                            <input type="number" min="1" value={smallBlind} onChange={(e) => setSmallBlind(Math.max(1, parseInt(e.target.value) || 0))} className="p-2 rounded-lg bg-gray-700 text-white w-28 text-center mt-2"/>
+                                        </div>
+                                        <div>
+                                            <h2 className="text-xl sm:text-2xl font-semibold text-yellow-300">Big Blind</h2>
+                                            <input type="number" min="1" value={bigBlind} onChange={(e) => setBigBlind(Math.max(1, parseInt(e.target.value) || 0))} className="p-2 rounded-lg bg-gray-700 text-white w-28 text-center mt-2"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Spielinformationen */}
+                            {(roundStarted || showWinnerSelection) && (
+                                <div className="bg-gray-800 bg-opacity-70 rounded-xl p-6 mb-8 w-full max-w-4xl shadow-lg grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
+                                    <div>
+                                        <h2 className="text-xl sm:text-2xl font-semibold text-yellow-300">Gesamt-Pot</h2>
+                                        <p className="text-3xl sm:text-4xl font-bold text-white">{totalPot}</p>
+                                    </div>
+                                    <div>
+                                        <h2 className="text-xl sm:text-2xl font-semibold text-yellow-300">Aktueller Einsatz</h2>
+                                        <p className="text-3xl sm:text-4xl font-bold text-white">{currentBet}</p>
+                                    </div>
+                                    <div className="sm:col-span-2">
+                                        <h2 className="text-xl sm:text-2xl font-semibold text-yellow-300">Aktuelle Straße</h2>
+                                        <p className="text-3xl sm:text-4xl font-bold text-white">{getStreetName(currentStreet)}</p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Spielerliste */}
+                            <div className="w-full max-w-6xl mb-8">
+                                <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-yellow-300 text-center">Spieler</h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                                    {players.map((player, index) => (
+                                        <div key={player.id} className={`bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 shadow-lg border-2 ${index === activePlayerIndex && !bettingRoundComplete && !player.isEliminated ? 'border-blue-500 scale-105' : player.hasFolded ? 'border-red-500 opacity-70' : player.isAllIn ? 'border-yellow-500 opacity-90' : player.isEliminated ? 'border-gray-500 opacity-50' : 'border-transparent'} transition-all duration-300 ease-in-out`}>
+                                            <h3 className="text-xl sm:text-2xl font-bold mb-2 text-white truncate">{player.name}</h3>
+                                            <p className="text-base sm:text-lg text-gray-300">Chips: <span className="font-bold text-yellow-300">{player.chips}</span></p>
+                                            {roundStarted && <p className="text-base sm:text-lg text-gray-300">Beitrag: <span className="font-bold text-yellow-300">{player.totalContribution}</span></p>}
+                                            {index === dealerButtonIndex && !player.isEliminated && <p className="text-purple-400 font-bold mt-2">DEALER</p>}
+                                            {index === smallBlindPlayerIndex && !player.hasFolded && !player.isEliminated && <p className="text-blue-400 font-bold mt-2">SMALL BLIND</p>}
+                                            {index === bigBlindPlayerIndex && !player.hasFolded && !player.isEliminated && <p className="text-orange-400 font-bold mt-2">BIG BLIND</p>}
+                                            {player.hasFolded && <p className="text-red-400 font-bold mt-2">GEPASST</p>}
+                                            {player.isAllIn && <p className="text-yellow-400 font-bold mt-2">ALL-IN</p>}
+                                            {player.isEliminated && <p className="text-red-600 font-bold mt-2">AUSGESCHIEDEN</p>}
+                                            {index === activePlayerIndex && !bettingRoundComplete && !player.hasFolded && !player.isAllIn && !player.isEliminated && <p className="text-green-400 font-bold mt-2">Sie sind dran!</p>}
+                                            {player.isEliminated && <button onClick={() => handleRebuy(player.id)} className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg text-sm sm:text-base">Re-buy ({initialChips})</button>}
+                                            {!roundStarted && !showWinnerSelection && (
+                                                <button onClick={() => removePlayer(player.id)} className="mt-2 w-full bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-lg text-sm sm:text-base">Entfernen</button>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Spieleraktionen */}
+                            {roundStarted && !bettingRoundComplete && players[activePlayerIndex] && (
+                                <div className="bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 w-full max-w-4xl shadow-lg">
+                                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 text-yellow-300 text-center">Aktionen von {players[activePlayerIndex].name}</h2>
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 mb-4">
+                                        <button onClick={() => handleAction('check')} disabled={isCheckDisabled} className={`py-3 px-4 rounded-lg font-bold transition duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base ${isCheckDisabled ? 'bg-gray-600 text-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-md'}`}>Check</button>
+                                        <button onClick={() => handleAction('call')} disabled={isCallDisabled} className={`py-3 px-4 rounded-lg font-bold transition duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base ${isCallDisabled ? 'bg-gray-600 text-gray-400 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-700 text-white shadow-md'}`}>Call ({chipsToCall})</button>
+                                        <button onClick={() => handleAction('fold')} className="py-3 px-4 rounded-lg font-bold transition duration-300 ease-in-out transform hover:scale-105 bg-red-600 hover:bg-red-700 text-white shadow-md text-sm sm:text-base">Fold</button>
+                                        <button onClick={() => handleAction('allIn')} className="py-3 px-4 rounded-lg font-bold transition duration-300 ease-in-out transform hover:scale-105 bg-yellow-600 hover:bg-yellow-700 text-white shadow-md col-span-2 sm:col-span-3 text-sm sm:text-base">All-In ({players[activePlayerIndex].chips})</button>
+                                    </div>
+                                    <div className="flex flex-col sm:flex-row gap-2">
+                                        <input type="number" placeholder="Erhöhungsbetrag" ref={raiseInputRef} min={currentBet + 1} onKeyDown={(e) => handleInputKeyDown(e, () => { const amount = parseInt(raiseInputRef.current.value); if (!isNaN(amount)) handleAction('raise', amount); })} className="p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full text-base"/>
+                                        <button onClick={() => { const amount = parseInt(raiseInputRef.current.value); if (!isNaN(amount)) handleAction('raise', amount); }} className="py-3 px-4 rounded-lg font-bold transition duration-300 ease-in-out transform hover:scale-105 bg-orange-600 hover:bg-orange-700 text-white shadow-md w-full sm:w-auto text-sm sm:text-base">Erhöhen</button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Gewinnerauswahl */}
+                            {showWinnerSelection && potsForDistribution.length > 0 && potsForDistribution[currentPotDistributionIndex] && (
+                                <div className="bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 w-full max-w-4xl shadow-lg mt-8">
+                                    <div className="mb-6 border border-gray-600 rounded-lg p-4">
+                                        <h3 className="text-xl sm:text-2xl font-semibold text-yellow-200">{potsForDistribution[currentPotDistributionIndex].name}: <span className="text-white">{potsForDistribution[currentPotDistributionIndex].amount} Chips</span></h3>
+                                        <p className="text-gray-400 mb-2 text-sm sm:text-base">Wählen Sie den/die Gewinner für diesen Pot:</p>
+                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                                            {potsForDistribution[currentPotDistributionIndex].eligiblePlayerIds.map(playerId => {
+                                                const player = players.find(p => p.id === playerId);
+                                                const isSelected = selectedWinners.includes(playerId);
+                                                return player ? (
+                                                    <button
+                                                        key={playerId}
+                                                        onClick={() => handleWinnerSelection(playerId)}
+                                                        className={`font-bold py-3 px-4 rounded-lg transition-all duration-200 text-sm sm:text-base ${isSelected ? 'bg-green-500 ring-2 ring-white' : 'bg-teal-600 hover:bg-teal-700'}`}
+                                                    >
+                                                        {player.name}
+                                                    </button>
+                                                ) : null;
+                                            })}
+                                        </div>
+                                        <button
+                                            onClick={distributePot}
+                                            disabled={selectedWinners.length === 0}
+                                            className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg disabled:bg-gray-500 disabled:cursor-not-allowed transition-all duration-200 text-sm sm:text-base"
+                                        >
+                                            Pot an {selectedWinners.length > 0 ? selectedWinners.length : ''} Spieler verteilen
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Neue Runde / Spiel zurücksetzen Buttons */}
+                            {players.length > 0 && !showWinnerSelection && (
+                                <div className="mt-8 flex flex-col sm:flex-row gap-4">
+                                    <button onClick={startNewRound} disabled={roundStarted && !bettingRoundComplete} className={`font-bold py-3 px-6 text-base sm:py-4 sm:px-8 sm:text-lg rounded-lg shadow-xl transition duration-300 ease-in-out transform hover:scale-105 ${roundStarted && !bettingRoundComplete ? 'bg-gray-600 text-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 text-white'}`}>
+                                        {roundStarted && !bettingRoundComplete ? 'Runde läuft...' : 'Neue Runde'}
+                                    </button>
+                                    <button onClick={resetGame} className="font-bold py-3 px-6 text-base sm:py-4 sm:px-8 sm:text-lg rounded-lg shadow-xl transition duration-300 ease-in-out transform hover:scale-105 bg-red-800 hover:bg-red-900 text-white">
+                                        Spiel zurücksetzen
+                                    </button>
+                                </div>
+                            )}
+                            {players.length === 0 && !roundStarted && (
+                                <div className="mt-8">
+                                    <p className="text-base sm:text-lg text-gray-300">Fügen Sie Spieler hinzu, um das Spiel zu starten.</p>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Rechte Seitenanzeige (sichtbar auf großen Bildschirmen) */}
+                        <div className="hidden lg:flex lg:w-1/6 items-center justify-center bg-gray-700 bg-opacity-50 rounded-xl p-4 shadow-lg">
+                            <p className="text-gray-300 text-center">Seitlicher Werbebereich</p>
+                            {/* Fügen Sie hier Ihren Werbecode ein */}
+                            <div className="w-full h-96 bg-gray-600 flex items-center justify-center rounded-lg">
+                                <span className="text-gray-300 text-lg">Anzeige 2</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Fußzeilenanzeige (sichtbar auf kleinen Bildschirmen) */}
+                    <div className="mt-8 w-full max-w-7xl lg:hidden bg-gray-700 bg-opacity-50 rounded-xl p-4 shadow-lg flex items-center justify-center">
+                        <p className="text-gray-300 text-center">Werbebereich in der Fußzeile</p>
+                        {/* Fügen Sie hier Ihren Werbecode ein */}
+                        <div className="w-full h-32 bg-gray-600 flex items-center justify-center rounded-lg">
+                            <span className="text-gray-300 text-lg">Anzeige Fußzeile</span>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Rendern der App in das 'root'-Element
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<App />);
+
+    </script>
+</body>
+</html>
