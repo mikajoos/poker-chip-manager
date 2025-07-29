@@ -19,8 +19,19 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #111827; /* Dunkler Hintergrund als Fallback */
+            /* Fügt einen unteren Abstand zum Body hinzu, um Platz für den fixierten Footer zu schaffen */
+            padding-bottom: 8rem; /* Anpassbarer Wert, je nach Höhe des Footers */
         }
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+
+        /* Stil für den fixierten Footer, um ihn immer sichtbar zu machen */
+        .fixed-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 50; /* Stellt sicher, dass der Footer über anderen Elementen liegt */
+        }
     </style>
 </head>
 <body>
@@ -751,7 +762,8 @@
                     </div>
 
                     {/* Fußzeilenanzeige (sichtbar auf kleinen Bildschirmen) */}
-                    <div className="mt-8 w-full max-w-7xl lg:hidden bg-gray-700 bg-opacity-50 rounded-xl p-4 shadow-lg flex items-center justify-center">
+                    {/* Die Klasse 'fixed-footer' wird hinzugefügt, um den Footer am unteren Rand zu fixieren. */}
+                    <div className="fixed-footer w-full p-4 lg:hidden bg-gray-700 bg-opacity-90 shadow-lg flex items-center justify-center">
                         <p className="text-gray-300 text-center">Werbebereich in der Fußzeile</p>
                         {/* Fügen Sie hier Ihren Werbecode ein */}
                         <div className="w-full h-32 bg-gray-600 flex items-center justify-center rounded-lg">
