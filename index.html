@@ -635,10 +635,11 @@
                     </div>
 
                     {/* Navigationsleiste */}
-                    <nav className="w-full max-w-4xl bg-gray-900 bg-opacity-80 rounded-xl p-3 mb-8 shadow-lg flex justify-around items-center">
-                        <button onClick={() => setCurrentPage('game')} className={`py-2 px-4 rounded-lg font-bold transition duration-300 ${currentPage === 'game' ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700'}`}>Spiel</button>
-                        <button onClick={() => setCurrentPage('about')} className={`py-2 px-4 rounded-lg font-bold transition duration-300 ${currentPage === 'about' ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700'}`}>Über uns</button>
-                        <button onClick={() => setCurrentPage('rules')} className={`py-2 px-4 rounded-lg font-bold transition duration-300 ${currentPage === 'rules' ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700'}`}>Regeln & Funktionen</button>
+                    <nav className="w-full max-w-4xl bg-gray-900 bg-opacity-80 rounded-xl p-3 mb-8 shadow-lg flex flex-wrap justify-center gap-2 sm:gap-4">
+                        <button onClick={() => setCurrentPage('game')} className={`py-2 px-3 sm:px-4 rounded-lg font-bold transition duration-300 text-sm sm:text-base ${currentPage === 'game' ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700'}`}>Spiel</button>
+                        <button onClick={() => setCurrentPage('about')} className={`py-2 px-3 sm:px-4 rounded-lg font-bold transition duration-300 text-sm sm:text-base ${currentPage === 'about' ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700'}`}>Über uns</button>
+                        <button onClick={() => setCurrentPage('rules_main')} className={`py-2 px-3 sm:px-4 rounded-lg font-bold transition duration-300 text-sm sm:text-base ${currentPage === 'rules_main' ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700'}`}>Regeln</button>
+                        <button onClick={() => setCurrentPage('app_features')} className={`py-2 px-3 sm:px-4 rounded-lg font-bold transition duration-300 text-sm sm:text-base ${currentPage === 'app_features' ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700'}`}>App Funktionen</button>
                     </nav>
 
                     {/* Konditionelles Rendering des Inhalts */}
@@ -786,92 +787,176 @@
                         <div className="w-full max-w-4xl bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 shadow-lg mt-8">
                             <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-yellow-300 text-center">Über uns</h2>
                             <p className="text-base sm:text-lg text-gray-300 mb-6">
-                                Willkommen beim **Poker Chip Manager**! Diese App wurde entwickelt, um Ihre Heim-Pokerrunden einfacher und fairer zu gestalten.
+                                Willkommen beim <strong>Poker Chip Manager</strong>! Diese App wurde entwickelt, um Ihre Heim-Pokerrunden einfacher und fairer zu gestalten.
                                 Schluss mit dem manuellen Zählen von Chips und dem Verwalten des Pots – unsere App übernimmt das für Sie.
-                                Egal, ob Sie ein erfahrener Spieler oder ein Neuling sind, der **Poker Chip Manager** hilft Ihnen, sich auf das Spiel zu konzentrieren und den Überblick über Chips und Einsätze zu behalten.
-                                Unser Ziel ist es, Ihnen ein intuitives und effizientes Tool zur Verfügung zu stellen, das den **Pokerabend** reibungsloser macht.
+                                Egal, ob Sie ein erfahrener Spieler oder ein Neuling sind, der <strong>Poker Chip Manager</strong> hilft Ihnen, sich auf das Spiel zu konzentrieren und den Überblick über Chips und Einsätze zu behalten.
+                                Unser Ziel ist es, Ihnen ein intuitives und effizientes Tool zur Verfügung zu stellen, das den <strong>Pokerabend</strong> reibungsloser macht.
                             </p>
                             <p className="text-base sm:text-lg text-gray-300">
-                                Wir verstehen die Herausforderungen bei der Organisation von **Homegames**, insbesondere wenn es um das **Chips verwalten** und den **Pott-Rechner** geht.
+                                Wir verstehen die Herausforderungen bei der Organisation von <strong>Homegames</strong>, insbesondere wenn es um das <strong>Chips verwalten</strong> und den <strong>Pott-Rechner</strong> geht.
                                 Deshalb haben wir diese Anwendung entwickelt, um Ihnen diese Aufgaben abzunehmen.
-                                Genießen Sie Ihr Spiel, während sich der **Poker Chip Manager** um die Zahlen kümmert!
+                                Genießen Sie Ihr Spiel, während sich der <strong>Poker Chip Manager</strong> um die Zahlen kümmert!
                             </p>
                         </div>
                     )}
 
-                    {currentPage === 'rules' && (
+                    {currentPage === 'rules_main' && (
                         <div className="w-full max-w-4xl bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 shadow-lg mt-8">
                             <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-yellow-300 text-center">Poker Regeln (Texas Hold'em Grundlagen)</h2>
                             <p className="text-base sm:text-lg text-gray-300 mb-4">
-                                Texas Hold'em ist die weltweit beliebteste Pokervariante und das Herzstück vieler **Pokerabende** und **Homegames**.
+                                Texas Hold'em ist die weltweit beliebteste Pokervariante und das Herzstück vieler <strong>Pokerabende</strong> und <strong>Homegames</strong>.
                                 Das Ziel des Spiels ist es, die beste Fünf-Karten-Hand aus einer Kombination Ihrer zwei privaten "Hole Cards" und den fünf öffentlichen "Community Cards" zu bilden.
-                                Der Spieler mit der besten Hand gewinnt den gesamten **Pot**. Unser **Poker Chip Manager** hilft Ihnen dabei, den Überblick über alle Einsätze und den **Gesamt-Pot** zu behalten.
+                                Der Spieler mit der besten Hand gewinnt den gesamten <strong>Pot</strong>. Unser <strong>Poker Chip Manager</strong> hilft Ihnen dabei, den Überblick über alle Einsätze und den <strong>Gesamt-Pot</strong> zu behalten.
                             </p>
 
-                            <h3 className="text-xl sm:text-2xl font-semibold text-yellow-300 mb-3">Die Poker-Hand-Rankings</h3>
+                            {/* Internes Navigationsmenü für Regeln & Funktionen */}
+                            <nav className="bg-gray-700 rounded-lg p-3 mb-6 shadow-inner flex flex-wrap justify-center gap-2 text-sm sm:text-base">
+                                <a href="#hand-rankings" className="py-2 px-3 rounded-md hover:bg-gray-600 transition duration-200">Hand-Rankings</a>
+                                <a href="#game-flow" className="py-2 px-3 rounded-md hover:bg-gray-600 transition duration-200">Spielablauf</a>
+                                <a href="#actions" className="py-2 px-3 rounded-md hover:bg-gray-600 transition duration-200">Aktionen</a>
+                                <a href="#terms" className="py-2 px-3 rounded-md hover:bg-gray-600 transition duration-200">Begriffe</a>
+                            </nav>
+
+                            <h3 id="hand-rankings" className="text-xl sm:text-2xl font-semibold text-yellow-300 mb-3 pt-4">Die Poker-Hand-Rankings</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">👑 <strong>Royal Flush:</strong> Die höchste Hand im Poker. Eine Straße von Zehn bis Ass, alle in der gleichen Farbe (z.B. A, K, Q, J, 10 Kreuz).</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">🌈 <strong>Straight Flush:</strong> Fünf Karten in numerischer Reihenfolge, alle in der gleichen Farbe (z.B. 9, 8, 7, 6, 5 Pik).</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">🍀 <strong>Four of a Kind (Vierling):</strong> Vier Karten des gleichen Rangs (z.B. vier Asse).</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">🏠 <strong>Full House:</strong> Drei Karten des gleichen Rangs und zwei Karten eines anderen gleichen Rangs (z.B. drei Könige und zwei Damen).</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">💧 <strong>Flush:</strong> Fünf Karten der gleichen Farbe, aber nicht in Reihenfolge (z.B. K, 10, 7, 6, 2 Herz).</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">📏 <strong>Straight (Straße):</strong> Fünf Karten in numerischer Reihenfolge, aber nicht in der gleichen Farbe (z.B. 8, 7, 6, 5, 4 gemischt).</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">✨ <strong>Three of a Kind (Drilling):</strong> Drei Karten des gleichen Rangs (z.B. drei Siebener).</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">👯 <strong>Two Pair (Zwei Paare):</strong> Zwei Karten eines Rangs und zwei Karten eines anderen Rangs (z.B. zwei Achter und zwei Vieren).</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">🤝 <strong>One Pair (Ein Paar):</strong> Zwei Karten des gleichen Rangs (z.B. zwei Damen).</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">🃏 <strong>High Card (Höchste Karte):</strong> Wenn keine der oben genannten Hände gebildet werden kann, entscheidet die höchste Einzelkarte.</p>
+                                </div>
+                            </div>
+
+                            <h3 id="game-flow" className="text-xl sm:text-2xl font-semibold text-yellow-300 mb-3 pt-4">Der Spielablauf bei Texas Hold'em</h3>
+                            <div className="space-y-4 mb-6">
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">➡️ <strong>Die Blinds:</strong> Bevor die Karten ausgeteilt werden, müssen zwei Spieler Pflichteinsätze leisten, die sogenannten Blinds. Der Spieler direkt links vom Dealer setzt den <strong>Small Blind</strong>, und der Spieler links davon setzt den <strong>Big Blind</strong>. Der Big Blind ist in der Regel doppelt so hoch wie der Small Blind. Im <strong>Poker Chip Manager</strong> können Sie die Werte für <strong>Small Blind und Big Blind einstellen</strong> und die App kümmert sich um das automatische Posten dieser Einsätze zu Beginn jeder Runde.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">➡️ <strong>Pre-Flop:</strong> Jeder Spieler erhält zwei verdeckte Karten, die sogenannten "Hole Cards". Die erste Wettrunde beginnt links vom Big Blind. Spieler können <strong>Call</strong> (den Big Blind mitgehen), <strong>Raise</strong> (den Einsatz erhöhen) oder <strong>Fold</strong> (passen) wählen. Die App bietet intuitive Buttons für diese Aktionen.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">➡️ <strong>Der Flop:</strong> Nach Abschluss der ersten Wettrunde werden drei Gemeinschaftskarten, der "Flop", offen in die Mitte des Tisches gelegt. Diese Karten können von allen Spielern verwendet werden, um ihre beste Hand zu bilden. Eine weitere Wettrunde folgt, beginnend mit dem ersten aktiven Spieler links vom Dealer.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">➡️ <strong>Der Turn:</strong> Eine vierte Gemeinschaftskarte, der "Turn", wird offen gelegt. Eine dritte Wettrunde beginnt.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">➡️ <strong>Der River:</strong> Die fünfte und letzte Gemeinschaftskarte, der "River", wird offen gelegt. Dies ist die letzte Möglichkeit für die Spieler, ihre Hände zu verbessern. Die vierte und letzte Wettrunde beginnt.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">➡️ <strong>Der Showdown:</strong> Wenn nach der letzten Wettrunde noch zwei oder mehr Spieler im Spiel sind, kommt es zum Showdown. Die verbleibenden Spieler zeigen ihre Hände, und der Spieler mit der besten Fünf-Karten-Hand gewinnt den gesamten <strong>Pot</strong>. Unser <strong>Pott-Rechner</strong> und die <strong>Pot-Verteilung</strong> Funktion der App machen die Gewinnerauswahl und die Chip-Vergabe einfach und fehlerfrei.</p>
+                                </div>
+                            </div>
+
+                            <h3 id="actions" className="text-xl sm:text-2xl font-semibold text-yellow-300 mb-3 pt-4">Die grundlegenden Poker-Aktionen</h3>
                             <p className="text-base sm:text-lg text-gray-300 mb-4">
-                                Die Kenntnis der Hand-Rankings ist entscheidend, um beim Poker erfolgreich zu sein. Hier sind die wichtigsten Hände, von der höchsten zur niedrigsten:
+                                Während der Wettrunden stehen den Spielern verschiedene Aktionen zur Verfügung, die alle über die Benutzeroberfläche des <strong>Poker Chip Manager</strong> ausgeführt werden können:
                             </p>
-                            <ul className="list-disc list-inside text-base sm:text-lg text-gray-300 mb-6 space-y-2">
-                                <li><strong>Royal Flush:</strong> Die höchste Hand im Poker. Eine Straße von Zehn bis Ass, alle in der gleichen Farbe (z.B. A, K, Q, J, 10 Kreuz).</li>
-                                <li><strong>Straight Flush:</strong> Fünf Karten in numerischer Reihenfolge, alle in der gleichen Farbe (z.B. 9, 8, 7, 6, 5 Pik).</li>
-                                <li><strong>Four of a Kind (Vierling):</strong> Vier Karten des gleichen Rangs (z.B. vier Asse).</li>
-                                <li><strong>Full House:</strong> Drei Karten des gleichen Rangs und zwei Karten eines anderen gleichen Rangs (z.B. drei Könige und zwei Damen).</li>
-                                <li><strong>Flush:</strong> Fünf Karten der gleichen Farbe, aber nicht in Reihenfolge (z.B. K, 10, 7, 6, 2 Herz).</li>
-                                <li><strong>Straight (Straße):</strong> Fünf Karten in numerischer Reihenfolge, aber nicht in der gleichen Farbe (z.B. 8, 7, 6, 5, 4 gemischt).</li>
-                                <li><strong>Three of a Kind (Drilling):</strong> Drei Karten des gleichen Rangs (z.B. drei Siebener).</li>
-                                <li><strong>Two Pair (Zwei Paare):</strong> Zwei Karten eines Rangs und zwei Karten eines anderen Rangs (z.B. zwei Achter und zwei Vieren).</li>
-                                <li><strong>One Pair (Ein Paar):</strong> Zwei Karten des gleichen Rangs (z.B. zwei Damen).</li>
-                                <li><strong>High Card (Höchste Karte):</strong> Wenn keine der oben genannten Hände gebildet werden kann, entscheidet die höchste Einzelkarte.</li>
-                            </ul>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">✅ <strong>Check (Schieben):</strong> Wenn in der aktuellen Wettrunde noch kein Einsatz getätigt wurde, kann ein Spieler "checken", d.h., er gibt den Zug an den nächsten Spieler weiter, ohne Chips zu setzen.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">💰 <strong>Bet (Setzen):</strong> Wenn in der aktuellen Wettrunde noch kein Einsatz getätigt wurde, kann ein Spieler den ersten Einsatz setzen.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">📞 <strong>Call (Mitgehen):</strong> Ein Spieler zahlt Chips in der Höhe des aktuellen Einsatzes, um im Spiel zu bleiben. Die App zeigt Ihnen den genauen Betrag an, den Sie "callen" müssen.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">⬆️ <strong>Raise (Erhöhen):</strong> Ein Spieler erhöht den aktuellen Einsatz. Alle nachfolgenden Spieler müssen mindestens diesen erhöhten Betrag "callen" oder erneut "raisen". Die App hilft Ihnen, den korrekten Erhöhungsbetrag einzugeben.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">❌ <strong>Fold (Passen):</strong> Ein Spieler gibt seine Hand auf und scheidet aus der aktuellen Runde aus. Alle bereits gesetzten Chips gehen in den Pot und können nicht zurückgewonnen werden. Die App markiert gepasste Spieler deutlich.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">🔥 <strong>All-In:</strong> Ein Spieler setzt alle seine verbleibenden Chips. Wenn der All-In-Betrag niedriger ist als der aktuelle Einsatz, kann der Spieler nur den Teil des Pots gewinnen, zu dem er beigetragen hat (Side-Pot). Unser <strong>Chip-Zähler</strong> verfolgt die Chips jedes Spielers genau, um All-Ins korrekt zu verwalten.</p>
+                                </div>
+                            </div>
 
-                            <h3 className="text-xl sm:text-2xl font-semibold text-yellow-300 mb-3">Der Spielablauf bei Texas Hold'em</h3>
-                            <p className="text-base sm:text-lg text-gray-300 mb-4">
-                                Eine Pokerrunde im Texas Hold'em durchläuft mehrere Phasen, die jeweils eine Wettrunde beinhalten.
-                            </p>
-                            <ul className="list-disc list-inside text-base sm:text-lg text-gray-300 mb-6 space-y-2">
-                                <li><strong>Die Blinds:</strong> Bevor die Karten ausgeteilt werden, müssen zwei Spieler Pflichteinsätze leisten, die sogenannten Blinds. Der Spieler direkt links vom Dealer setzt den <strong>Small Blind</strong>, und der Spieler links davon setzt den <strong>Big Blind</strong>. Der Big Blind ist in der Regel doppelt so hoch wie der Small Blind. Im **Poker Chip Manager** können Sie die Werte für **Small Blind und Big Blind einstellen** und die App kümmert sich um das automatische Posten dieser Einsätze zu Beginn jeder Runde.</li>
-                                <li><strong>Pre-Flop:</strong> Jeder Spieler erhält zwei verdeckte Karten, die sogenannten "Hole Cards". Die erste Wettrunde beginnt links vom Big Blind. Spieler können **Call** (den Big Blind mitgehen), **Raise** (den Einsatz erhöhen) oder **Fold** (passen) wählen. Die App bietet intuitive Buttons für diese Aktionen.</li>
-                                <li><strong>Der Flop:</strong> Nach Abschluss der ersten Wettrunde werden drei Gemeinschaftskarten, der "Flop", offen in die Mitte des Tisches gelegt. Diese Karten können von allen Spielern verwendet werden, um ihre beste Hand zu bilden. Eine weitere Wettrunde folgt, beginnend mit dem ersten aktiven Spieler links vom Dealer.</li>
-                                <li><strong>Der Turn:</strong> Eine vierte Gemeinschaftskarte, der "Turn", wird offen gelegt. Eine dritte Wettrunde beginnt.</li>
-                                <li><strong>Der River:</strong> Die fünfte und letzte Gemeinschaftskarte, der "River", wird offen gelegt. Dies ist die letzte Möglichkeit für die Spieler, ihre Hände zu verbessern. Die vierte und letzte Wettrunde beginnt.</li>
-                                <li><strong>Der Showdown:</strong> Wenn nach der letzten Wettrunde noch zwei oder mehr Spieler im Spiel sind, kommt es zum Showdown. Die verbleibenden Spieler zeigen ihre Hände, und der Spieler mit der besten Fünf-Karten-Hand gewinnt den gesamten **Pot**. Unser **Pott-Rechner** und die **Pot-Verteilung** Funktion der App machen die Gewinnerauswahl und die Chip-Vergabe einfach und fehlerfrei.</li>
-                            </ul>
+                            <h3 id="terms" className="text-xl sm:text-2xl font-semibold text-yellow-300 mb-3 pt-4">Wichtige Poker-Begriffe</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">🔘 <strong>Dealer Button:</strong> Eine Markierung, die anzeigt, welcher Spieler in der aktuellen Runde der nominelle Dealer ist. Die Blinds und die Action beginnen relativ zu diesem Button.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">💰 <strong>Pot:</strong> Die Summe aller Chips, die in einer Runde von den Spielern gesetzt wurden. Der Pot wird am Ende der Runde an den Gewinner ausgezahlt.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">💸 <strong>Side-Pot:</strong> Ein separater Pot, der entsteht, wenn ein Spieler All-In geht und nicht genug Chips hat, um alle nachfolgenden Einsätze mitzugehen.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">🃏 <strong>Community Cards:</strong> Die fünf Karten, die offen in der Mitte des Tisches liegen und von allen Spielern verwendet werden können.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">🔒 <strong>Hole Cards:</strong> Die zwei verdeckten Karten, die jeder Spieler zu Beginn einer Runde erhält und die nur er selbst sehen kann.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">💲 <strong>Small Blind:</strong> Der kleinere der beiden Pflichteinsätze, der von dem Spieler direkt links vom Dealer gesetzt wird. Er ist der erste Einsatz in jeder Pokerrunde.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">💲 <strong>Big Blind:</strong> Der größere der beiden Pflichteinsätze, der vom Spieler links neben dem Small Blind gesetzt wird. Er ist in der Regel doppelt so hoch wie der Small Blind.</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
-                            <h3 className="text-xl sm:text-2xl font-semibold text-yellow-300 mb-3">Die grundlegenden Poker-Aktionen</h3>
-                            <p className="text-base sm:text-lg text-gray-300 mb-4">
-                                Während der Wettrunden stehen den Spielern verschiedene Aktionen zur Verfügung, die alle über die Benutzeroberfläche des **Poker Chip Manager** ausgeführt werden können:
-                            </p>
-                            <ul className="list-disc list-inside text-base sm:text-lg text-gray-300 mb-6 space-y-2">
-                                <li><strong>Check (Schieben):</strong> Wenn in der aktuellen Wettrunde noch kein Einsatz getätigt wurde, kann ein Spieler "checken", d.h., er gibt den Zug an den nächsten Spieler weiter, ohne Chips zu setzen.</li>
-                                <li><strong>Bet (Setzen):</strong> Wenn in der aktuellen Wettrunde noch kein Einsatz getätigt wurde, kann ein Spieler den ersten Einsatz setzen.</li>
-                                <li><strong>Call (Mitgehen):</strong> Ein Spieler zahlt Chips in der Höhe des aktuellen Einsatzes, um im Spiel zu bleiben. Die App zeigt Ihnen den genauen Betrag an, den Sie "callen" müssen.</li>
-                                <li><strong>Raise (Erhöhen):</strong> Ein Spieler erhöht den aktuellen Einsatz. Alle nachfolgenden Spieler müssen mindestens diesen erhöhten Betrag "callen" oder erneut "raisen". Die App hilft Ihnen, den korrekten Erhöhungsbetrag einzugeben.</li>
-                                <li><strong>Fold (Passen):</strong> Ein Spieler gibt seine Hand auf und scheidet aus der aktuellen Runde aus. Alle bereits gesetzten Chips gehen in den Pot und können nicht zurückgewonnen werden. Die App markiert gepasste Spieler deutlich.</li>
-                                <li><strong>All-In:</strong> Ein Spieler setzt alle seine verbleibenden Chips. Wenn der All-In-Betrag niedriger ist als der aktuelle Einsatz, kann der Spieler nur den Teil des Pots gewinnen, zu dem er beigetragen hat (Side-Pot). Unser **Chip-Zähler** verfolgt die Chips jedes Spielers genau, um All-Ins korrekt zu verwalten.</li>
-                            </ul>
-
-                            <h3 className="text-xl sm:text-2xl font-semibold text-yellow-300 mb-3">Wichtige Poker-Begriffe</h3>
-                            <ul className="list-disc list-inside text-base sm:text-lg text-gray-300 mb-6 space-y-2">
-                                <li><strong>Dealer Button:</strong> Eine Markierung, die anzeigt, welcher Spieler in der aktuellen Runde der nominelle Dealer ist. Die Blinds und die Action beginnen relativ zu diesem Button.</li>
-                                <li><strong>Pot:</strong> Die Summe aller Chips, die in einer Runde von den Spielern gesetzt wurden. Der Pot wird am Ende der Runde an den Gewinner ausgezahlt.</li>
-                                <li><strong>Side-Pot:</strong> Ein separater Pot, der entsteht, wenn ein Spieler All-In geht und nicht genug Chips hat, um alle nachfolgenden Einsätze mitzugehen.</li>
-                                <li><strong>Community Cards:</strong> Die fünf Karten, die offen in der Mitte des Tisches liegen und von allen Spielern verwendet werden können.</li>
-                                <li><strong>Hole Cards:</strong> Die zwei verdeckten Karten, die jeder Spieler zu Beginn einer Runde erhält und die nur er selbst sehen kann.</li>
-                            </ul>
-
-                            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-yellow-300 text-center">App Funktionen (ausführlicher)</h2>
-                            <ul className="list-disc list-inside text-base sm:text-lg text-gray-300 space-y-2">
-                                <li><strong>Spieler hinzufügen/entfernen:</strong> Verwalten Sie die Teilnehmer Ihrer **Pokerrunde** mühelos. Fügen Sie neue Spieler hinzu oder entfernen Sie sie bei Bedarf, um die Flexibilität Ihres **Pokerabends** zu gewährleisten.</li>
-                                <li><strong>Chips verwalten:</strong> Jeder Spieler startet mit einer festgelegten Anzahl an Chips (standardmäßig 1000, aber **anpassbar**). Die App fungiert als zuverlässiger **Chip-Zähler**, der die Chipstände jedes Spielers automatisch aktualisiert und Ihnen hilft, den Überblick über die **Chips** zu behalten.</li>
-                                <li><strong>Blinds einstellen:</strong> Konfigurieren Sie die Werte für **Small Blind** und **Big Blind** vor jeder Runde. Die App postet diese Pflichteinsätze automatisch und sorgt so für einen reibungslosen Start jeder Hand.</li>
-                                <li><strong>Automatischer Pot:</strong> Der **Poker Chip Manager** berechnet und aktualisiert den **Gesamt-Pot** in Echtzeit. Sie müssen sich keine Gedanken über das manuelle Zählen machen, der **Pott-Rechner** erledigt die Arbeit für Sie.</li>
-                                <li><strong>Spieleraktionen:</strong> Führen Sie alle gängigen Poker-Aktionen wie **Check**, **Call**, **Raise**, **Fold** und **All-In** direkt über die intuitive Benutzeroberfläche aus. Die App berücksichtigt dabei automatisch die Chipstände und den aktuellen Einsatz.</li>
-                                <li><strong>Rundenverwaltung:</strong> Starten Sie neue Runden mit einem Klick, setzen Sie das gesamte Spiel zurück oder verfolgen Sie die aktuelle Wettstraße (Pre-Flop, Flop, Turn, River). Die App führt Sie durch die verschiedenen Phasen des Spiels.</li>
-                                <li><strong>Pot-Verteilung:</strong> Nach dem Showdown können Sie die Gewinner einfach auswählen. Die App berechnet automatisch die Aufteilung des **Pots**, einschließlich eventueller **Side-Pots**, und verteilt die Chips korrekt an die Gewinner.</li>
-                                <li><strong>Re-buy Funktion:</strong> Ermöglichen Sie ausgeschiedenen Spielern, sich mit einer festgelegten Anzahl an Chips (standardmäßig den Anfangschips) wieder einzukaufen, um weiter am **Pokerabend** teilnehmen zu können.</li>
-                                <li><strong>Speicherung des Spielstands:</strong> Der aktuelle Spielstand wird automatisch im Browser gespeichert (Local Storage), sodass Sie die App jederzeit schließen und später genau dort weitermachen können, wo Sie aufgehört haben. Ideal für unterbrochene **Homegames**.</li>
-                            </ul>
+                    {currentPage === 'app_features' && (
+                        <div className="w-full max-w-4xl bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 shadow-lg mt-8">
+                            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-yellow-300 text-center">App Funktionen</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">➕➖ <strong>Spieler hinzufügen/entfernen:</strong> Verwalten Sie die Teilnehmer Ihrer <strong>Pokerrunde</strong> mühelos. Fügen Sie neue Spieler hinzu oder entfernen Sie sie bei Bedarf, um die Flexibilität Ihres <strong>Pokerabends</strong> zu gewährleisten.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">📊 <strong>Chips verwalten:</strong> Jeder Spieler startet mit einer festgelegten Anzahl an Chips (standardmäßig 1000, aber <strong>anpassbar</strong>). Die App fungiert als zuverlässiger <strong>Chip-Zähler</strong>, der die Chipstände jedes Spielers automatisch aktualisiert und Ihnen hilft, den Überblick über die <strong>Chips</strong> zu behalten.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">💲 <strong>Blinds einstellen:</strong> Konfigurieren Sie die Werte für <strong>Small Blind</strong> und <strong>Big Blind</strong> vor jeder Runde. Die App postet diese Pflichteinsätze automatisch und sorgt so für einen reibungslosen Start jeder Hand.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">📈 <strong>Automatischer Pot:</strong> Der <strong>Poker Chip Manager</strong> berechnet und aktualisiert den <strong>Gesamt-Pot</strong> in Echtzeit. Sie müssen sich keine Gedanken über das manuelle Zählen machen, der <strong>Pott-Rechner</strong> erledigt die Arbeit für Sie.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">🕹️ <strong>Spieleraktionen:</strong> Führen Sie alle gängigen Poker-Aktionen wie <strong>Check</strong>, <strong>Call</strong>, <strong>Raise</strong>, <strong>Fold</strong> und <strong>All-In</strong> direkt über die intuitive Benutzeroberfläche aus. Die App berücksichtigt dabei automatisch die Chipstände und den aktuellen Einsatz.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">🔄 <strong>Rundenverwaltung:</strong> Starten Sie neue Runden mit einem Klick, setzen Sie das gesamte Spiel zurück oder verfolgen Sie die aktuelle Wettstraße (Pre-Flop, Flop, Turn, River). Die App führt Sie durch die verschiedenen Phasen des Spiels.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">🏆 <strong>Pot-Verteilung:</strong> Nach dem Showdown können Sie die Gewinner einfach auswählen. Die App berechnet automatisch die Aufteilung des <strong>Pots</strong>, einschließlich eventueller <strong>Side-Pots</strong>, und verteilt die Chips korrekt an die Gewinner.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">↩️ <strong>Re-buy Funktion:</strong> Ermöglichen Sie ausgeschiedenen Spielern, sich mit einer festgelegten Anzahl an Chips (standardmäßig den Anfangschips) wieder einzukaufen, um weiter am <strong>Pokerabend</strong> teilnehmen zu können.</p>
+                                </div>
+                                <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+                                    <p className="text-base sm:text-lg text-gray-300">💾 <strong>Speicherung des Spielstands:</strong> Der aktuelle Spielstand wird automatisch im Browser gespeichert (Local Storage), sodass Sie die App jederzeit schließen und später genau dort weitermachen können, wo Sie aufgehört haben. Ideal für unterbrochene <strong>Homegames</strong>.</p>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>
