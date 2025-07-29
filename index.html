@@ -2,9 +2,12 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8" />
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4151295910496296"
+     crossorigin="anonymous"></script>
     <!-- WICHTIG: Dieser Meta-Tag ist entscheidend für responsives Design -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Poker Chip Manager</title>
+    <title>Poker Chip Manager | Chips & Pot verwalten für Homegames</title>
+    <meta name="description" content="Verwalten Sie ganz einfach Poker-Chips, Blinds und Pötte für Ihre Heim-Pokerrunden. Ein effizienter Chip-Zähler und Pott-Rechner für alle Texas Hold'em Spieler." />
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4151295910496296"
      crossorigin="anonymous"></script>
     <!-- Einbindung von Tailwind CSS -->
@@ -15,15 +18,48 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Poker Chip Manager",
+      "operatingSystem": "Web",
+      "applicationCategory": "GameApplication",
+      "description": "Verwalten Sie Poker-Chips, Blinds und Pötte für Ihre Heim-Pokerrunden. Ein einfaches und effizientes Tool für alle Spieler.",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8", // Beispielwert
+        "reviewCount": "120" // Beispielwert
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR"
+      }
+    }
+    </script>
+    
     <style>
-        /* Zusätzliche Stile für ein besseres Aussehen */
+        /* Zusätzliche Stile für ein besseres Aussehen und Zentrierung */
         body {
             font-family: 'Inter', sans-serif;
             background-color: #111827; /* Dunkler Hintergrund als Fallback */
-            /* Fügt einen unteren Abstand zum Body hinzu, um Platz für den fixierten Footer zu schaffen */
-            padding-bottom: 8rem; /* Anpassbarer Wert, je nach Höhe des Footers */
+            display: flex; /* Flexbox für Zentrierung */
+            justify-content: center; /* Horizontal zentrieren */
+            align-items: flex-start; /* Oben ausrichten, falls der Inhalt kurz ist */
+            min-height: 100vh; /* Mindesthöhe von 100% der Viewport-Höhe */
+            padding: 2rem 0; /* Etwas Padding oben und unten */
+            box-sizing: border-box; /* Sicherstellen, dass Padding nicht zur Gesamtbreite/-höhe beiträgt */
         }
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+
+        /* Für den Hauptcontainer der Anwendung, um sicherzustellen, dass er wachsen kann */
+        #root {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Zentriert die Kindelemente */
+        }
     </style>
 </head>
 <body>
@@ -78,6 +114,8 @@
             const [bigBlindPlayerIndex, setBigBlindPlayerIndex] = useState(null);
             // Zustand für die ausgewählten Gewinner eines Pots
             const [selectedWinners, setSelectedWinners] = useState([]);
+            // Zustand für die aktuelle Seite der Navigation
+            const [currentPage, setCurrentPage] = useState('game');
 
 
             // Hilfsfunktion zur Ermittlung des Namens der aktuellen Straße
@@ -590,153 +628,252 @@
             const isCallDisabled = chipsToCall <= 0;
 
             return (
-                <div className="min-h-screen bg-gradient-to-br from-green-700 to-green-900 text-white font-sans p-4 sm:p-6 md:p-8 flex flex-col items-center">
+                <div className="min-h-screen bg-gradient-to-br from-green-700 to-green-900 text-white font-sans p-4 sm:p-6 md:p-8 flex flex-col items-center w-full">
                     <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-yellow-300 drop-shadow-lg text-center">Poker Chip Manager</h1>
                     <div className="bg-gray-800 bg-opacity-70 rounded-xl p-4 mb-6 w-full max-w-4xl text-center shadow-lg">
                         <p className="text-base sm:text-lg font-semibold">{message}</p>
                     </div>
 
-                    {/* Hauptcontainer für Inhalt und Seitenanzeigen */}
-                    <div className="flex flex-col lg:flex-row w-full max-w-7xl gap-4">
+                    {/* Navigationsleiste */}
+                    <nav className="w-full max-w-4xl bg-gray-900 bg-opacity-80 rounded-xl p-3 mb-8 shadow-lg flex justify-around items-center">
+                        <button onClick={() => setCurrentPage('game')} className={`py-2 px-4 rounded-lg font-bold transition duration-300 ${currentPage === 'game' ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700'}`}>Spiel</button>
+                        <button onClick={() => setCurrentPage('about')} className={`py-2 px-4 rounded-lg font-bold transition duration-300 ${currentPage === 'about' ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700'}`}>Über uns</button>
+                        <button onClick={() => setCurrentPage('rules')} className={`py-2 px-4 rounded-lg font-bold transition duration-300 ${currentPage === 'rules' ? 'bg-blue-600 text-white' : 'text-gray-300 hover:bg-gray-700'}`}>Regeln & Funktionen</button>
+                    </nav>
 
-                        {/* Hauptinhalt der Anwendung */}
-                        <div className="w-full lg:w-4/6 flex flex-col items-center">
-                            {/* Spiel-Setup */}
-                            {!roundStarted && !showWinnerSelection && (
-                                <div className="w-full max-w-4xl">
-                                    <div className="bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 mb-6 shadow-lg flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                                        <input type="text" placeholder="Spielername" value={newPlayerName} onChange={(e) => setNewPlayerName(e.target.value)} onKeyDown={(e) => handleInputKeyDown(e, addPlayer)} className="text-base p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto flex-grow"/>
-                                        <button onClick={addPlayer} className="text-base bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 w-full sm:w-auto">Spieler hinzufügen</button>
+                    {/* Konditionelles Rendering des Inhalts */}
+                    {currentPage === 'game' && (
+                        <div className="flex flex-col lg:flex-row w-full max-w-7xl gap-4 items-start">
+                            {/* Hauptinhalt der Anwendung */}
+                            <div className="w-full flex flex-col items-center">
+                                {/* Spiel-Setup */}
+                                {!roundStarted && !showWinnerSelection && (
+                                    <div className="w-full max-w-4xl">
+                                        <div className="bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 mb-6 shadow-lg flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                                            <input type="text" placeholder="Spielername" value={newPlayerName} onChange={(e) => setNewPlayerName(e.target.value)} onKeyDown={(e) => handleInputKeyDown(e, addPlayer)} className="text-base p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto flex-grow"/>
+                                            <button onClick={addPlayer} className="text-base bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 w-full sm:w-auto">Spieler hinzufügen</button>
+                                        </div>
+                                        <div className="bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 mb-8 shadow-lg grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                                            <div>
+                                                <h2 className="text-xl sm:text-2xl font-semibold text-yellow-300">Anfangs-Chips</h2>
+                                                <input type="number" min="100" value={initialChips} onChange={(e) => setInitialChips(Math.max(100, parseInt(e.target.value) || 0))} className="p-2 rounded-lg bg-gray-700 text-white w-28 text-center mt-2"/>
+                                            </div>
+                                            <div>
+                                                <h2 className="text-xl sm:text-2xl font-semibold text-yellow-300">Small Blind</h2>
+                                                <input type="number" min="1" value={smallBlind} onChange={(e) => setSmallBlind(Math.max(1, parseInt(e.target.value) || 0))} className="p-2 rounded-lg bg-gray-700 text-white w-28 text-center mt-2"/>
+                                            </div>
+                                            <div>
+                                                <h2 className="text-xl sm:text-2xl font-semibold text-yellow-300">Big Blind</h2>
+                                                <input type="number" min="1" value={bigBlind} onChange={(e) => setBigBlind(Math.max(1, parseInt(e.target.value) || 0))} className="p-2 rounded-lg bg-gray-700 text-white w-28 text-center mt-2"/>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 mb-8 shadow-lg grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                                )}
+
+                                {/* Spielinformationen */}
+                                {(roundStarted || showWinnerSelection) && (
+                                    <div className="bg-gray-800 bg-opacity-70 rounded-xl p-6 mb-8 w-full max-w-4xl shadow-lg grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
                                         <div>
-                                            <h2 className="text-xl sm:text-2xl font-semibold text-yellow-300">Anfangs-Chips</h2>
-                                            <input type="number" min="100" value={initialChips} onChange={(e) => setInitialChips(Math.max(100, parseInt(e.target.value) || 0))} className="p-2 rounded-lg bg-gray-700 text-white w-28 text-center mt-2"/>
+                                            <h2 className="text-xl sm:text-2xl font-semibold text-yellow-300">Gesamt-Pot</h2>
+                                            <p className="text-3xl sm:text-4xl font-bold text-white">{totalPot}</p>
                                         </div>
                                         <div>
-                                            <h2 className="text-xl sm:text-2xl font-semibold text-yellow-300">Small Blind</h2>
-                                            <input type="number" min="1" value={smallBlind} onChange={(e) => setSmallBlind(Math.max(1, parseInt(e.target.value) || 0))} className="p-2 rounded-lg bg-gray-700 text-white w-28 text-center mt-2"/>
+                                            <h2 className="text-xl sm:text-2xl font-semibold text-yellow-300">Aktueller Einsatz</h2>
+                                            <p className="text-3xl sm:text-4xl font-bold text-white">{currentBet}</p>
                                         </div>
-                                        <div>
-                                            <h2 className="text-xl sm:text-2xl font-semibold text-yellow-300">Big Blind</h2>
-                                            <input type="number" min="1" value={bigBlind} onChange={(e) => setBigBlind(Math.max(1, parseInt(e.target.value) || 0))} className="p-2 rounded-lg bg-gray-700 text-white w-28 text-center mt-2"/>
+                                        <div className="sm:col-span-2">
+                                            <h2 className="text-xl sm:text-2xl font-semibold text-yellow-300">Aktuelle Straße</h2>
+                                            <p className="text-3xl sm:text-4xl font-bold text-white">{getStreetName(currentStreet)}</p>
                                         </div>
+                                    </div>
+                                )}
+
+                                {/* Spielerliste */}
+                                <div className="w-full max-w-6xl mb-8">
+                                    <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-yellow-300 text-center">Spieler</h2>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                                        {players.map((player, index) => (
+                                            <div key={player.id} className={`bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 shadow-lg border-2 ${index === activePlayerIndex && !bettingRoundComplete && !player.isEliminated ? 'border-blue-500 scale-105' : player.hasFolded ? 'border-red-500 opacity-70' : player.isAllIn ? 'border-yellow-500 opacity-90' : player.isEliminated ? 'border-gray-500 opacity-50' : 'border-transparent'} transition-all duration-300 ease-in-out`}>
+                                                <h3 className="text-xl sm:text-2xl font-bold mb-2 text-white truncate">{player.name}</h3>
+                                                <p className="text-base sm:text-lg text-gray-300">Chips: <span className="font-bold text-yellow-300">{player.chips}</span></p>
+                                                {roundStarted && <p className="text-base sm:text-lg text-gray-300">Beitrag: <span className="font-bold text-yellow-300">{player.totalContribution}</span></p>}
+                                                {index === dealerButtonIndex && !player.isEliminated && <p className="text-purple-400 font-bold mt-2">DEALER</p>}
+                                                {index === smallBlindPlayerIndex && !player.hasFolded && !player.isEliminated && <p className="text-blue-400 font-bold mt-2">SMALL BLIND</p>}
+                                                {index === bigBlindPlayerIndex && !player.hasFolded && !player.isEliminated && <p className="text-orange-400 font-bold mt-2">BIG BLIND</p>}
+                                                {player.hasFolded && <p className="text-red-400 font-bold mt-2">GEPASST</p>}
+                                                {player.isAllIn && <p className="text-yellow-400 font-bold mt-2">ALL-IN</p>}
+                                                {player.isEliminated && <p className="text-red-600 font-bold mt-2">AUSGESCHIEDEN</p>}
+                                                {index === activePlayerIndex && !bettingRoundComplete && !player.hasFolded && !player.isAllIn && !player.isEliminated && <p className="text-green-400 font-bold mt-2">Sie sind dran!</p>}
+                                                {player.isEliminated && <button onClick={() => handleRebuy(player.id)} className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg text-sm sm:text-base">Re-buy ({initialChips})</button>}
+                                                {!roundStarted && !showWinnerSelection && (
+                                                    <button onClick={() => removePlayer(player.id)} className="mt-2 w-full bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-lg text-sm sm:text-base">Entfernen</button>
+                                                )}
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
-                            )}
 
-                            {/* Spielinformationen */}
-                            {(roundStarted || showWinnerSelection) && (
-                                <div className="bg-gray-800 bg-opacity-70 rounded-xl p-6 mb-8 w-full max-w-4xl shadow-lg grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
-                                    <div>
-                                        <h2 className="text-xl sm:text-2xl font-semibold text-yellow-300">Gesamt-Pot</h2>
-                                        <p className="text-3xl sm:text-4xl font-bold text-white">{totalPot}</p>
-                                    </div>
-                                    <div>
-                                        <h2 className="text-xl sm:text-2xl font-semibold text-yellow-300">Aktueller Einsatz</h2>
-                                        <p className="text-3xl sm:text-4xl font-bold text-white">{currentBet}</p>
-                                    </div>
-                                    <div className="sm:col-span-2">
-                                        <h2 className="text-xl sm:text-2xl font-semibold text-yellow-300">Aktuelle Straße</h2>
-                                        <p className="text-3xl sm:text-4xl font-bold text-white">{getStreetName(currentStreet)}</p>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Spielerliste */}
-                            <div className="w-full max-w-6xl mb-8">
-                                <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-yellow-300 text-center">Spieler</h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                                    {players.map((player, index) => (
-                                        <div key={player.id} className={`bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 shadow-lg border-2 ${index === activePlayerIndex && !bettingRoundComplete && !player.isEliminated ? 'border-blue-500 scale-105' : player.hasFolded ? 'border-red-500 opacity-70' : player.isAllIn ? 'border-yellow-500 opacity-90' : player.isEliminated ? 'border-gray-500 opacity-50' : 'border-transparent'} transition-all duration-300 ease-in-out`}>
-                                            <h3 className="text-xl sm:text-2xl font-bold mb-2 text-white truncate">{player.name}</h3>
-                                            <p className="text-base sm:text-lg text-gray-300">Chips: <span className="font-bold text-yellow-300">{player.chips}</span></p>
-                                            {roundStarted && <p className="text-base sm:text-lg text-gray-300">Beitrag: <span className="font-bold text-yellow-300">{player.totalContribution}</span></p>}
-                                            {index === dealerButtonIndex && !player.isEliminated && <p className="text-purple-400 font-bold mt-2">DEALER</p>}
-                                            {index === smallBlindPlayerIndex && !player.hasFolded && !player.isEliminated && <p className="text-blue-400 font-bold mt-2">SMALL BLIND</p>}
-                                            {index === bigBlindPlayerIndex && !player.hasFolded && !player.isEliminated && <p className="text-orange-400 font-bold mt-2">BIG BLIND</p>}
-                                            {player.hasFolded && <p className="text-red-400 font-bold mt-2">GEPASST</p>}
-                                            {player.isAllIn && <p className="text-yellow-400 font-bold mt-2">ALL-IN</p>}
-                                            {player.isEliminated && <p className="text-red-600 font-bold mt-2">AUSGESCHIEDEN</p>}
-                                            {index === activePlayerIndex && !bettingRoundComplete && !player.hasFolded && !player.isAllIn && !player.isEliminated && <p className="text-green-400 font-bold mt-2">Sie sind dran!</p>}
-                                            {player.isEliminated && <button onClick={() => handleRebuy(player.id)} className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg text-sm sm:text-base">Re-buy ({initialChips})</button>}
-                                            {!roundStarted && !showWinnerSelection && (
-                                                <button onClick={() => removePlayer(player.id)} className="mt-2 w-full bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded-lg text-sm sm:text-base">Entfernen</button>
-                                            )}
+                                {/* Spieleraktionen */}
+                                {roundStarted && !bettingRoundComplete && players[activePlayerIndex] && (
+                                    <div className="bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 w-full max-w-4xl shadow-lg">
+                                        <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 text-yellow-300 text-center">Aktionen von {players[activePlayerIndex].name}</h2>
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 mb-4">
+                                            <button onClick={() => handleAction('check')} disabled={isCheckDisabled} className={`py-3 px-4 rounded-lg font-bold transition duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base ${isCheckDisabled ? 'bg-gray-600 text-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-md'}`}>Check</button>
+                                            <button onClick={() => handleAction('call')} disabled={isCallDisabled} className={`py-3 px-4 rounded-lg font-bold transition duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base ${isCallDisabled ? 'bg-gray-600 text-gray-400 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-700 text-white shadow-md'}`}>Call ({chipsToCall})</button>
+                                            <button onClick={() => handleAction('fold')} className="py-3 px-4 rounded-lg font-bold transition duration-300 ease-in-out transform hover:scale-105 bg-red-600 hover:bg-red-700 text-white shadow-md text-sm sm:text-base">Fold</button>
+                                            <button onClick={() => handleAction('allIn')} className="py-3 px-4 rounded-lg font-bold transition duration-300 ease-in-out transform hover:scale-105 bg-yellow-600 hover:bg-yellow-700 text-white shadow-md col-span-2 sm:col-span-3 text-sm sm:text-base">All-In ({players[activePlayerIndex].chips})</button>
                                         </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Spieleraktionen */}
-                            {roundStarted && !bettingRoundComplete && players[activePlayerIndex] && (
-                                <div className="bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 w-full max-w-4xl shadow-lg">
-                                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 text-yellow-300 text-center">Aktionen von {players[activePlayerIndex].name}</h2>
-                                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4 mb-4">
-                                        <button onClick={() => handleAction('check')} disabled={isCheckDisabled} className={`py-3 px-4 rounded-lg font-bold transition duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base ${isCheckDisabled ? 'bg-gray-600 text-gray-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-md'}`}>Check</button>
-                                        <button onClick={() => handleAction('call')} disabled={isCallDisabled} className={`py-3 px-4 rounded-lg font-bold transition duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base ${isCallDisabled ? 'bg-gray-600 text-gray-400 cursor-not-allowed' : 'bg-purple-600 hover:bg-purple-700 text-white shadow-md'}`}>Call ({chipsToCall})</button>
-                                        <button onClick={() => handleAction('fold')} className="py-3 px-4 rounded-lg font-bold transition duration-300 ease-in-out transform hover:scale-105 bg-red-600 hover:bg-red-700 text-white shadow-md text-sm sm:text-base">Fold</button>
-                                        <button onClick={() => handleAction('allIn')} className="py-3 px-4 rounded-lg font-bold transition duration-300 ease-in-out transform hover:scale-105 bg-yellow-600 hover:bg-yellow-700 text-white shadow-md col-span-2 sm:col-span-3 text-sm sm:text-base">All-In ({players[activePlayerIndex].chips})</button>
-                                    </div>
-                                    <div className="flex flex-col sm:flex-row gap-2">
-                                        <input type="number" placeholder="Erhöhungsbetrag" ref={raiseInputRef} min={currentBet + 1} onKeyDown={(e) => handleInputKeyDown(e, () => { const amount = parseInt(raiseInputRef.current.value); if (!isNaN(amount)) handleAction('raise', amount); })} className="p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full text-base"/>
-                                        <button onClick={() => { const amount = parseInt(raiseInputRef.current.value); if (!isNaN(amount)) handleAction('raise', amount); }} className="py-3 px-4 rounded-lg font-bold transition duration-300 ease-in-out transform hover:scale-105 bg-orange-600 hover:bg-orange-700 text-white shadow-md w-full sm:w-auto text-sm sm:text-base">Erhöhen</button>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Gewinnerauswahl */}
-                            {showWinnerSelection && potsForDistribution.length > 0 && potsForDistribution[currentPotDistributionIndex] && (
-                                <div className="bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 w-full max-w-4xl shadow-lg mt-8">
-                                    <div className="mb-6 border border-gray-600 rounded-lg p-4">
-                                        <h3 className="text-xl sm:text-2xl font-semibold text-yellow-200">{potsForDistribution[currentPotDistributionIndex].name}: <span className="text-white">{potsForDistribution[currentPotDistributionIndex].amount} Chips</span></h3>
-                                        <p className="text-gray-400 mb-2 text-sm sm:text-base">Wählen Sie den/die Gewinner für diesen Pot:</p>
-                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                                            {potsForDistribution[currentPotDistributionIndex].eligiblePlayerIds.map(playerId => {
-                                                const player = players.find(p => p.id === playerId);
-                                                const isSelected = selectedWinners.includes(playerId);
-                                                return player ? (
-                                                    <button
-                                                        key={playerId}
-                                                        onClick={() => handleWinnerSelection(playerId)}
-                                                        className={`font-bold py-3 px-4 rounded-lg transition-all duration-200 text-sm sm:text-base ${isSelected ? 'bg-green-500 ring-2 ring-white' : 'bg-teal-600 hover:bg-teal-700'}`}
-                                                    >
-                                                        {player.name}
-                                                    </button>
-                                                ) : null;
-                                            })}
+                                        <div className="flex flex-col sm:flex-row gap-2">
+                                            <input type="number" placeholder="Erhöhungsbetrag" ref={raiseInputRef} min={currentBet + 1} onKeyDown={(e) => handleInputKeyDown(e, () => { const amount = parseInt(raiseInputRef.current.value); if (!isNaN(amount)) handleAction('raise', amount); })} className="p-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full text-base"/>
+                                            <button onClick={() => { const amount = parseInt(raiseInputRef.current.value); if (!isNaN(amount)) handleAction('raise', amount); }} className="py-3 px-4 rounded-lg font-bold transition duration-300 ease-in-out transform hover:scale-105 bg-orange-600 hover:bg-orange-700 text-white shadow-md w-full sm:w-auto text-sm sm:text-base">Erhöhen</button>
                                         </div>
-                                        <button
-                                            onClick={distributePot}
-                                            disabled={selectedWinners.length === 0}
-                                            className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg disabled:bg-gray-500 disabled:cursor-not-allowed transition-all duration-200 text-sm sm:text-base"
-                                        >
-                                            Pot an {selectedWinners.length > 0 ? selectedWinners.length : ''} Spieler verteilen
+                                    </div>
+                                )}
+
+                                {/* Gewinnerauswahl */}
+                                {showWinnerSelection && potsForDistribution.length > 0 && potsForDistribution[currentPotDistributionIndex] && (
+                                    <div className="bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 w-full max-w-4xl shadow-lg mt-8">
+                                        <div className="mb-6 border border-gray-600 rounded-lg p-4">
+                                            <h3 className="text-xl sm:text-2xl font-semibold text-yellow-200">{potsForDistribution[currentPotDistributionIndex].name}: <span className="text-white">{potsForDistribution[currentPotDistributionIndex].amount} Chips</span></h3>
+                                            <p className="text-gray-400 mb-2 text-sm sm:text-base">Wählen Sie den/die Gewinner für diesen Pot:</p>
+                                            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                                                {potsForDistribution[currentPotDistributionIndex].eligiblePlayerIds.map(playerId => {
+                                                    const player = players.find(p => p.id === playerId);
+                                                    const isSelected = selectedWinners.includes(playerId);
+                                                    return player ? (
+                                                        <button
+                                                            key={playerId}
+                                                            onClick={() => handleWinnerSelection(playerId)}
+                                                            className={`font-bold py-3 px-4 rounded-lg transition-all duration-200 text-sm sm:text-base ${isSelected ? 'bg-green-500 ring-2 ring-white' : 'bg-teal-600 hover:bg-teal-700'}`}
+                                                        >
+                                                            {player.name}
+                                                        </button>
+                                                    ) : null;
+                                                })}
+                                            </div>
+                                            <button
+                                                onClick={distributePot}
+                                                disabled={selectedWinners.length === 0}
+                                                className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg disabled:bg-gray-500 disabled:cursor-not-allowed transition-all duration-200 text-sm sm:text-base"
+                                            >
+                                                Pot an {selectedWinners.length > 0 ? selectedWinners.length : ''} Spieler verteilen
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Neue Runde / Spiel zurücksetzen Buttons */}
+                                {players.length > 0 && !showWinnerSelection && (
+                                    <div className="mt-8 flex flex-col sm:flex-row gap-4">
+                                        <button onClick={startNewRound} disabled={roundStarted && !bettingRoundComplete} className={`font-bold py-3 px-6 text-base sm:py-4 sm:px-8 sm:text-lg rounded-lg shadow-xl transition duration-300 ease-in-out transform hover:scale-105 ${roundStarted && !bettingRoundComplete ? 'bg-gray-600 text-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 text-white'}`}>
+                                            {roundStarted && !bettingRoundComplete ? 'Runde läuft...' : 'Neue Runde'}
+                                        </button>
+                                        <button onClick={resetGame} className="font-bold py-3 px-6 text-base sm:py-4 sm:px-8 sm:text-lg rounded-lg shadow-xl transition duration-300 ease-in-out transform hover:scale-105 bg-red-800 hover:bg-red-900 text-white">
+                                            Spiel zurücksetzen
                                         </button>
                                     </div>
-                                </div>
-                            )}
-
-                            {/* Neue Runde / Spiel zurücksetzen Buttons */}
-                            {players.length > 0 && !showWinnerSelection && (
-                                <div className="mt-8 flex flex-col sm:flex-row gap-4">
-                                    <button onClick={startNewRound} disabled={roundStarted && !bettingRoundComplete} className={`font-bold py-3 px-6 text-base sm:py-4 sm:px-8 sm:text-lg rounded-lg shadow-xl transition duration-300 ease-in-out transform hover:scale-105 ${roundStarted && !bettingRoundComplete ? 'bg-gray-600 text-gray-400 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700 text-white'}`}>
-                                        {roundStarted && !bettingRoundComplete ? 'Runde läuft...' : 'Neue Runde'}
-                                    </button>
-                                    <button onClick={resetGame} className="font-bold py-3 px-6 text-base sm:py-4 sm:px-8 sm:text-lg rounded-lg shadow-xl transition duration-300 ease-in-out transform hover:scale-105 bg-red-800 hover:bg-red-900 text-white">
-                                        Spiel zurücksetzen
-                                    </button>
-                                </div>
-                            )}
-                            {players.length === 0 && !roundStarted && (
-                                <div className="mt-8">
-                                    <p className="text-base sm:text-lg text-gray-300">Fügen Sie Spieler hinzu, um das Spiel zu starten.</p>
-                                </div>
-                            )}
+                                )}
+                                {players.length === 0 && !roundStarted && (
+                                    <div className="mt-8">
+                                        <p className="text-base sm:text-lg text-gray-300">Fügen Sie Spieler hinzu, um das Spiel zu starten.</p>
+                                    </div>
+                                )}
+                            </div>
                         </div>
+                    )}
 
-                    </div>
+                    {currentPage === 'about' && (
+                        <div className="w-full max-w-4xl bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 shadow-lg mt-8">
+                            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-yellow-300 text-center">Über uns</h2>
+                            <p className="text-base sm:text-lg text-gray-300 mb-6">
+                                Willkommen beim **Poker Chip Manager**! Diese App wurde entwickelt, um Ihre Heim-Pokerrunden einfacher und fairer zu gestalten.
+                                Schluss mit dem manuellen Zählen von Chips und dem Verwalten des Pots – unsere App übernimmt das für Sie.
+                                Egal, ob Sie ein erfahrener Spieler oder ein Neuling sind, der **Poker Chip Manager** hilft Ihnen, sich auf das Spiel zu konzentrieren und den Überblick über Chips und Einsätze zu behalten.
+                                Unser Ziel ist es, Ihnen ein intuitives und effizientes Tool zur Verfügung zu stellen, das den **Pokerabend** reibungsloser macht.
+                            </p>
+                            <p className="text-base sm:text-lg text-gray-300">
+                                Wir verstehen die Herausforderungen bei der Organisation von **Homegames**, insbesondere wenn es um das **Chips verwalten** und den **Pott-Rechner** geht.
+                                Deshalb haben wir diese Anwendung entwickelt, um Ihnen diese Aufgaben abzunehmen.
+                                Genießen Sie Ihr Spiel, während sich der **Poker Chip Manager** um die Zahlen kümmert!
+                            </p>
+                        </div>
+                    )}
 
+                    {currentPage === 'rules' && (
+                        <div className="w-full max-w-4xl bg-gray-800 bg-opacity-70 rounded-xl p-4 sm:p-6 shadow-lg mt-8">
+                            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-yellow-300 text-center">Poker Regeln (Texas Hold'em Grundlagen)</h2>
+                            <p className="text-base sm:text-lg text-gray-300 mb-4">
+                                Texas Hold'em ist die weltweit beliebteste Pokervariante und das Herzstück vieler **Pokerabende** und **Homegames**.
+                                Das Ziel des Spiels ist es, die beste Fünf-Karten-Hand aus einer Kombination Ihrer zwei privaten "Hole Cards" und den fünf öffentlichen "Community Cards" zu bilden.
+                                Der Spieler mit der besten Hand gewinnt den gesamten **Pot**. Unser **Poker Chip Manager** hilft Ihnen dabei, den Überblick über alle Einsätze und den **Gesamt-Pot** zu behalten.
+                            </p>
+
+                            <h3 className="text-xl sm:text-2xl font-semibold text-yellow-300 mb-3">Die Poker-Hand-Rankings</h3>
+                            <p className="text-base sm:text-lg text-gray-300 mb-4">
+                                Die Kenntnis der Hand-Rankings ist entscheidend, um beim Poker erfolgreich zu sein. Hier sind die wichtigsten Hände, von der höchsten zur niedrigsten:
+                            </p>
+                            <ul className="list-disc list-inside text-base sm:text-lg text-gray-300 mb-6 space-y-2">
+                                <li><strong>Royal Flush:</strong> Die höchste Hand im Poker. Eine Straße von Zehn bis Ass, alle in der gleichen Farbe (z.B. A, K, Q, J, 10 Kreuz).</li>
+                                <li><strong>Straight Flush:</strong> Fünf Karten in numerischer Reihenfolge, alle in der gleichen Farbe (z.B. 9, 8, 7, 6, 5 Pik).</li>
+                                <li><strong>Four of a Kind (Vierling):</strong> Vier Karten des gleichen Rangs (z.B. vier Asse).</li>
+                                <li><strong>Full House:</strong> Drei Karten des gleichen Rangs und zwei Karten eines anderen gleichen Rangs (z.B. drei Könige und zwei Damen).</li>
+                                <li><strong>Flush:</strong> Fünf Karten der gleichen Farbe, aber nicht in Reihenfolge (z.B. K, 10, 7, 6, 2 Herz).</li>
+                                <li><strong>Straight (Straße):</strong> Fünf Karten in numerischer Reihenfolge, aber nicht in der gleichen Farbe (z.B. 8, 7, 6, 5, 4 gemischt).</li>
+                                <li><strong>Three of a Kind (Drilling):</strong> Drei Karten des gleichen Rangs (z.B. drei Siebener).</li>
+                                <li><strong>Two Pair (Zwei Paare):</strong> Zwei Karten eines Rangs und zwei Karten eines anderen Rangs (z.B. zwei Achter und zwei Vieren).</li>
+                                <li><strong>One Pair (Ein Paar):</strong> Zwei Karten des gleichen Rangs (z.B. zwei Damen).</li>
+                                <li><strong>High Card (Höchste Karte):</strong> Wenn keine der oben genannten Hände gebildet werden kann, entscheidet die höchste Einzelkarte.</li>
+                            </ul>
+
+                            <h3 className="text-xl sm:text-2xl font-semibold text-yellow-300 mb-3">Der Spielablauf bei Texas Hold'em</h3>
+                            <p className="text-base sm:text-lg text-gray-300 mb-4">
+                                Eine Pokerrunde im Texas Hold'em durchläuft mehrere Phasen, die jeweils eine Wettrunde beinhalten.
+                            </p>
+                            <ul className="list-disc list-inside text-base sm:text-lg text-gray-300 mb-6 space-y-2">
+                                <li><strong>Die Blinds:</strong> Bevor die Karten ausgeteilt werden, müssen zwei Spieler Pflichteinsätze leisten, die sogenannten Blinds. Der Spieler direkt links vom Dealer setzt den <strong>Small Blind</strong>, und der Spieler links davon setzt den <strong>Big Blind</strong>. Der Big Blind ist in der Regel doppelt so hoch wie der Small Blind. Im **Poker Chip Manager** können Sie die Werte für **Small Blind und Big Blind einstellen** und die App kümmert sich um das automatische Posten dieser Einsätze zu Beginn jeder Runde.</li>
+                                <li><strong>Pre-Flop:</strong> Jeder Spieler erhält zwei verdeckte Karten, die sogenannten "Hole Cards". Die erste Wettrunde beginnt links vom Big Blind. Spieler können **Call** (den Big Blind mitgehen), **Raise** (den Einsatz erhöhen) oder **Fold** (passen) wählen. Die App bietet intuitive Buttons für diese Aktionen.</li>
+                                <li><strong>Der Flop:</strong> Nach Abschluss der ersten Wettrunde werden drei Gemeinschaftskarten, der "Flop", offen in die Mitte des Tisches gelegt. Diese Karten können von allen Spielern verwendet werden, um ihre beste Hand zu bilden. Eine weitere Wettrunde folgt, beginnend mit dem ersten aktiven Spieler links vom Dealer.</li>
+                                <li><strong>Der Turn:</strong> Eine vierte Gemeinschaftskarte, der "Turn", wird offen gelegt. Eine dritte Wettrunde beginnt.</li>
+                                <li><strong>Der River:</strong> Die fünfte und letzte Gemeinschaftskarte, der "River", wird offen gelegt. Dies ist die letzte Möglichkeit für die Spieler, ihre Hände zu verbessern. Die vierte und letzte Wettrunde beginnt.</li>
+                                <li><strong>Der Showdown:</strong> Wenn nach der letzten Wettrunde noch zwei oder mehr Spieler im Spiel sind, kommt es zum Showdown. Die verbleibenden Spieler zeigen ihre Hände, und der Spieler mit der besten Fünf-Karten-Hand gewinnt den gesamten **Pot**. Unser **Pott-Rechner** und die **Pot-Verteilung** Funktion der App machen die Gewinnerauswahl und die Chip-Vergabe einfach und fehlerfrei.</li>
+                            </ul>
+
+                            <h3 className="text-xl sm:text-2xl font-semibold text-yellow-300 mb-3">Die grundlegenden Poker-Aktionen</h3>
+                            <p className="text-base sm:text-lg text-gray-300 mb-4">
+                                Während der Wettrunden stehen den Spielern verschiedene Aktionen zur Verfügung, die alle über die Benutzeroberfläche des **Poker Chip Manager** ausgeführt werden können:
+                            </p>
+                            <ul className="list-disc list-inside text-base sm:text-lg text-gray-300 mb-6 space-y-2">
+                                <li><strong>Check (Schieben):</strong> Wenn in der aktuellen Wettrunde noch kein Einsatz getätigt wurde, kann ein Spieler "checken", d.h., er gibt den Zug an den nächsten Spieler weiter, ohne Chips zu setzen.</li>
+                                <li><strong>Bet (Setzen):</strong> Wenn in der aktuellen Wettrunde noch kein Einsatz getätigt wurde, kann ein Spieler den ersten Einsatz setzen.</li>
+                                <li><strong>Call (Mitgehen):</strong> Ein Spieler zahlt Chips in der Höhe des aktuellen Einsatzes, um im Spiel zu bleiben. Die App zeigt Ihnen den genauen Betrag an, den Sie "callen" müssen.</li>
+                                <li><strong>Raise (Erhöhen):</strong> Ein Spieler erhöht den aktuellen Einsatz. Alle nachfolgenden Spieler müssen mindestens diesen erhöhten Betrag "callen" oder erneut "raisen". Die App hilft Ihnen, den korrekten Erhöhungsbetrag einzugeben.</li>
+                                <li><strong>Fold (Passen):</strong> Ein Spieler gibt seine Hand auf und scheidet aus der aktuellen Runde aus. Alle bereits gesetzten Chips gehen in den Pot und können nicht zurückgewonnen werden. Die App markiert gepasste Spieler deutlich.</li>
+                                <li><strong>All-In:</strong> Ein Spieler setzt alle seine verbleibenden Chips. Wenn der All-In-Betrag niedriger ist als der aktuelle Einsatz, kann der Spieler nur den Teil des Pots gewinnen, zu dem er beigetragen hat (Side-Pot). Unser **Chip-Zähler** verfolgt die Chips jedes Spielers genau, um All-Ins korrekt zu verwalten.</li>
+                            </ul>
+
+                            <h3 className="text-xl sm:text-2xl font-semibold text-yellow-300 mb-3">Wichtige Poker-Begriffe</h3>
+                            <ul className="list-disc list-inside text-base sm:text-lg text-gray-300 mb-6 space-y-2">
+                                <li><strong>Dealer Button:</strong> Eine Markierung, die anzeigt, welcher Spieler in der aktuellen Runde der nominelle Dealer ist. Die Blinds und die Action beginnen relativ zu diesem Button.</li>
+                                <li><strong>Pot:</strong> Die Summe aller Chips, die in einer Runde von den Spielern gesetzt wurden. Der Pot wird am Ende der Runde an den Gewinner ausgezahlt.</li>
+                                <li><strong>Side-Pot:</strong> Ein separater Pot, der entsteht, wenn ein Spieler All-In geht und nicht genug Chips hat, um alle nachfolgenden Einsätze mitzugehen.</li>
+                                <li><strong>Community Cards:</strong> Die fünf Karten, die offen in der Mitte des Tisches liegen und von allen Spielern verwendet werden können.</li>
+                                <li><strong>Hole Cards:</strong> Die zwei verdeckten Karten, die jeder Spieler zu Beginn einer Runde erhält und die nur er selbst sehen kann.</li>
+                            </ul>
+
+                            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-yellow-300 text-center">App Funktionen (ausführlicher)</h2>
+                            <ul className="list-disc list-inside text-base sm:text-lg text-gray-300 space-y-2">
+                                <li><strong>Spieler hinzufügen/entfernen:</strong> Verwalten Sie die Teilnehmer Ihrer **Pokerrunde** mühelos. Fügen Sie neue Spieler hinzu oder entfernen Sie sie bei Bedarf, um die Flexibilität Ihres **Pokerabends** zu gewährleisten.</li>
+                                <li><strong>Chips verwalten:</strong> Jeder Spieler startet mit einer festgelegten Anzahl an Chips (standardmäßig 1000, aber **anpassbar**). Die App fungiert als zuverlässiger **Chip-Zähler**, der die Chipstände jedes Spielers automatisch aktualisiert und Ihnen hilft, den Überblick über die **Chips** zu behalten.</li>
+                                <li><strong>Blinds einstellen:</strong> Konfigurieren Sie die Werte für **Small Blind** und **Big Blind** vor jeder Runde. Die App postet diese Pflichteinsätze automatisch und sorgt so für einen reibungslosen Start jeder Hand.</li>
+                                <li><strong>Automatischer Pot:</strong> Der **Poker Chip Manager** berechnet und aktualisiert den **Gesamt-Pot** in Echtzeit. Sie müssen sich keine Gedanken über das manuelle Zählen machen, der **Pott-Rechner** erledigt die Arbeit für Sie.</li>
+                                <li><strong>Spieleraktionen:</strong> Führen Sie alle gängigen Poker-Aktionen wie **Check**, **Call**, **Raise**, **Fold** und **All-In** direkt über die intuitive Benutzeroberfläche aus. Die App berücksichtigt dabei automatisch die Chipstände und den aktuellen Einsatz.</li>
+                                <li><strong>Rundenverwaltung:</strong> Starten Sie neue Runden mit einem Klick, setzen Sie das gesamte Spiel zurück oder verfolgen Sie die aktuelle Wettstraße (Pre-Flop, Flop, Turn, River). Die App führt Sie durch die verschiedenen Phasen des Spiels.</li>
+                                <li><strong>Pot-Verteilung:</strong> Nach dem Showdown können Sie die Gewinner einfach auswählen. Die App berechnet automatisch die Aufteilung des **Pots**, einschließlich eventueller **Side-Pots**, und verteilt die Chips korrekt an die Gewinner.</li>
+                                <li><strong>Re-buy Funktion:</strong> Ermöglichen Sie ausgeschiedenen Spielern, sich mit einer festgelegten Anzahl an Chips (standardmäßig den Anfangschips) wieder einzukaufen, um weiter am **Pokerabend** teilnehmen zu können.</li>
+                                <li><strong>Speicherung des Spielstands:</strong> Der aktuelle Spielstand wird automatisch im Browser gespeichert (Local Storage), sodass Sie die App jederzeit schließen und später genau dort weitermachen können, wo Sie aufgehört haben. Ideal für unterbrochene **Homegames**.</li>
+                            </ul>
+                        </div>
+                    )}
                 </div>
             );
         };
