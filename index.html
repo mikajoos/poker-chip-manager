@@ -24,15 +24,6 @@
             padding-bottom: 8rem; /* Anpassbarer Wert, je nach Höhe des Footers */
         }
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-
-        /* Stil für den fixierten Footer, um ihn immer sichtbar zu machen */
-        .fixed-footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 50; /* Stellt sicher, dass der Footer über anderen Elementen liegt */
-        }
     </style>
 </head>
 <body>
@@ -607,14 +598,6 @@
 
                     {/* Hauptcontainer für Inhalt und Seitenanzeigen */}
                     <div className="flex flex-col lg:flex-row w-full max-w-7xl gap-4">
-                        {/* Linke Seitenanzeige (sichtbar auf großen Bildschirmen) */}
-                        <div className="hidden lg:flex lg:w-1/6 items-center justify-center bg-gray-700 bg-opacity-50 rounded-xl p-4 shadow-lg">
-                            <p className="text-gray-300 text-center">Seitlicher Werbebereich</p>
-                            {/* Fügen Sie hier Ihren Werbecode ein */}
-                            <div className="w-full h-96 bg-gray-600 flex items-center justify-center rounded-lg">
-                                <span className="text-gray-300 text-lg">Anzeige 1</span>
-                            </div>
-                        </div>
 
                         {/* Hauptinhalt der Anwendung */}
                         <div className="w-full lg:w-4/6 flex flex-col items-center">
@@ -752,25 +735,8 @@
                             )}
                         </div>
 
-                        {/* Rechte Seitenanzeige (sichtbar auf großen Bildschirmen) */}
-                        <div className="hidden lg:flex lg:w-1/6 items-center justify-center bg-gray-700 bg-opacity-50 rounded-xl p-4 shadow-lg">
-                            <p className="text-gray-300 text-center">Seitlicher Werbebereich</p>
-                            {/* Fügen Sie hier Ihren Werbecode ein */}
-                            <div className="w-full h-96 bg-gray-600 flex items-center justify-center rounded-lg">
-                                <span className="text-gray-300 text-lg">Anzeige 2</span>
-                            </div>
-                        </div>
                     </div>
 
-                    {/* Fußzeilenanzeige (sichtbar auf kleinen Bildschirmen) */}
-                    {/* Die Klasse 'fixed-footer' wird hinzugefügt, um den Footer am unteren Rand zu fixieren. */}
-                    <div className="fixed-footer w-full p-4 lg:hidden bg-gray-700 bg-opacity-90 shadow-lg flex items-center justify-center">
-                        <p className="text-gray-300 text-center">Werbebereich in der Fußzeile</p>
-                        {/* Fügen Sie hier Ihren Werbecode ein */}
-                        <div className="w-full h-32 bg-gray-600 flex items-center justify-center rounded-lg">
-                            <span className="text-gray-300 text-lg">Anzeige Fußzeile</span>
-                        </div>
-                    </div>
                 </div>
             );
         };
